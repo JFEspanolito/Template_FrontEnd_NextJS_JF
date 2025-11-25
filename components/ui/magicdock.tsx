@@ -8,6 +8,7 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
+import { cn } from "@/libs/utils";
 
 type SpringOptions = {
   stiffness?: number;
@@ -16,10 +17,6 @@ type SpringOptions = {
   velocity?: number;
   restSpeed?: number;
   restDelta?: number;
-};
-
-const cn = (...classes: (string | undefined | false | null)[]) => {
-  return classes.filter(Boolean).join(" ");
 };
 
 export type DockItemData = {
@@ -35,6 +32,7 @@ export type DockItemData = {
 export type MagicDockProps = {
   items: DockItemData[];
   className?: string;
+  itemClassName?: string;
   distance?: number;
   panelHeight?: number;
   baseItemSize?: number;
@@ -42,6 +40,9 @@ export type MagicDockProps = {
   magnification?: number;
   spring?: SpringOptions;
   variant?: "default" | "gradient" | "tooltip";
+  hoverAnimation?: boolean;
+  hoverDistance?: string;
+  labelPosition?: "top" | "bottom";
 };
 
 type DockItemProps = {
@@ -55,6 +56,10 @@ type DockItemProps = {
   setHoveredIndex: React.Dispatch<React.SetStateAction<number | null>>;
   hoveredIndex: number | null;
   isTouchDevice: boolean;
+  itemClassName?: string;
+  hoverAnimation: boolean;
+  hoverDistance?: string;
+  labelPosition: "top" | "bottom";
 };
 
 function DockItem({
@@ -68,12 +73,18 @@ function DockItem({
   setHoveredIndex,
   hoveredIndex,
   isTouchDevice,
+  itemClassName,
+  hoverAnimation,
+  hoverDistance,
+  labelPosition,
 }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const mouseXMotion = useMotionValue(0);
   const isHovered = useMotionValue(0);
   const x = useMotionValue(0);
   const tooltipSpringConfig = { stiffness: 100, damping: 5 };
+  const [isStableHover, setIsStableHover] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const rotate = useSpring(
     useTransform(x, [-100, 100], [-15, 15]),
@@ -119,20 +130,39 @@ function DockItem({
   const targetSize = useTransform(
     mouseXMotion,
     [-distance, 0, distance],
-    [baseItemSize, isTouchDevice ? baseItemSize : magnification, baseItemSize]
+    [baseItemSize, isTouchDevice || !hoverAnimation ? baseItemSize : magnification, baseItemSize]
   );
   const size = useSpring(targetSize, spring);
 
-  const getBorderStyles = () => {
-    switch (variant) {
-      case "gradient":
-        return "border-transparent group-hover:border-slate-700 dark:border-white/[0.2]";
-      case "tooltip":
-        return "border-white/[0.4] group-hover:border-white";
-      default:
-        return "border-neutral-700";
+  const defaultItemStyles = "bg-black border-2 shadow-md border-neutral-700";
+
+  const handleMouseEnter = () => {
+    if (isTouchDevice) return;
+
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
     }
+
+    setIsStableHover(true);
+    setHoveredIndex(item.id);
   };
+
+  const handleMouseLeave = () => {
+    if (isTouchDevice) return;
+
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsStableHover(false);
+      setHoveredIndex(null);
+    }, 200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <motion.div
@@ -141,9 +171,11 @@ function DockItem({
       style={{
         width: size,
         height: size,
+        padding: "8px",
+        margin: "-8px",
       }}
-      onMouseEnter={() => !isTouchDevice && setHoveredIndex(item.id)}
-      onMouseLeave={() => !isTouchDevice && setHoveredIndex(null)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onMouseMove={handleItemMouseMove}
       onClick={item.onClick}
       tabIndex={0}
@@ -152,10 +184,19 @@ function DockItem({
     >
       <motion.div
         className={cn(
-          "relative flex h-full w-full items-center justify-center rounded-full bg-black border-2 shadow-md transition-colors duration-300",
-          getBorderStyles()
+          "relative flex h-full w-full items-center justify-center rounded-full transition-colors duration-300",
+          defaultItemStyles,
+          itemClassName
         )}
         initial={{}}
+        animate={{
+          y: isStableHover && hoverDistance && hoverAnimation ? `-${hoverDistance}` : "0rem",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 30,
+        }}
       >
         {item.image ? (
           <img
@@ -172,18 +213,23 @@ function DockItem({
         <AnimatePresence>
           {hoveredIndex === item.id && (
             <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.8 }}
+              initial={{ opacity: 0, y: labelPosition === "top" ? -8 : 8, scale: 0.8 }}
               animate={{
                 opacity: 1,
-                y: -6,
+                y: labelPosition === "top" ? -6 : 6,
                 scale: 1,
                 transition: {
                   type: "spring",
-                  stiffness: 260,
-                  damping: 10,
+                  stiffness: 400,
+                  damping: 15,
                 },
               }}
-              exit={{ opacity: 0, y: -8, scale: 0.8 }}
+              exit={{ 
+                opacity: 0, 
+                y: labelPosition === "top" ? -8 : 8, 
+                scale: 0.8,
+                transition: { duration: 0.15 }
+              }}
               style={
                 variant === "tooltip"
                   ? {
@@ -195,15 +241,11 @@ function DockItem({
               }
               className={cn(
                 "absolute z-50 -translate-x-1/2 flex-col items-center justify-center rounded-md bg-black px-4 py-2 text-xs shadow-xl",
-                variant === "tooltip" ? "-top-12" : "-top-10"
+                labelPosition === "top" 
+                  ? (variant === "tooltip" ? "-top-12" : "-top-10")
+                  : (variant === "tooltip" ? "-bottom-12" : "-bottom-10")
               )}
             >
-              {variant === "tooltip" && (
-                <>
-                  <div className="absolute inset-x-10 -bottom-px z-30 h-px w-[20%] bg-linear-to-r from-transparent via-emerald-500 to-transparent" />
-                  <div className="absolute -bottom-px z-30 h-px w-[40%] bg-linear-to-r from-transparent via-sky-500 to-transparent" />
-                </>
-              )}
               <div className="relative z-30 text-base font-bold text-white">
                 {item.label}
               </div>
@@ -221,6 +263,7 @@ function DockItem({
 export default function MagicDock({
   items,
   className = "",
+  itemClassName = "",
   spring = { mass: 0.1, stiffness: 150, damping: 12 },
   magnification = 70,
   distance = 150,
@@ -228,6 +271,9 @@ export default function MagicDock({
   dockHeight = 256,
   baseItemSize = 50,
   variant = "default",
+  hoverAnimation = true,
+  hoverDistance,
+  labelPosition = "bottom",
 }: MagicDockProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -235,16 +281,14 @@ export default function MagicDock({
   const isHovered = useMotionValue(0);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     const mediaQuery = window.matchMedia("(pointer: coarse)");
-
     const handleChange = (e: MediaQueryListEvent) => {
       setIsTouchDevice(e.matches);
     };
-
     setIsTouchDevice(mediaQuery.matches);
-
     mediaQuery.addEventListener("change", handleChange);
-
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
     };
@@ -272,13 +316,13 @@ export default function MagicDock({
     >
       <motion.div
         onMouseMove={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          if (!isTouchDevice) {
+          if (!isTouchDevice && hoverAnimation) {
             isHovered.set(1);
             mouseX.current = e.pageX;
           }
         }}
         onMouseLeave={() => {
-          if (!isTouchDevice) {
+          if (!isTouchDevice && hoverAnimation) {
             isHovered.set(0);
             mouseX.current = Infinity;
           }
@@ -304,6 +348,10 @@ export default function MagicDock({
             setHoveredIndex={setHoveredIndex}
             hoveredIndex={hoveredIndex}
             isTouchDevice={isTouchDevice}
+            itemClassName={itemClassName}
+            hoverAnimation={hoverAnimation}
+            hoverDistance={hoverDistance}
+            labelPosition={labelPosition}
           />
         ))}
       </motion.div>
