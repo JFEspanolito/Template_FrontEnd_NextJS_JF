@@ -1,10 +1,33 @@
 @import "tailwindcss";
 
+/* Shared tokens (theme-agnostic) — keep minimal values here */
+:root {
+  /* Brand colors (shared) */
+  --brand-green-light: #2a6a37;
+  --brand-green-dark: #1f4d29;
+  --brand-gold: #d4af37;
+  --brand-gold-hover: #c59b2f;
+
+  /* Focus / overlays (shared fallbacks) */
+  --focus-ring: rgba(212, 175, 55, 0.35);
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --overlay-05: rgba(0, 0, 0, 0.05);
+  --overlay-10: rgba(0, 0, 0, 0.1);
+  --overlay-15: rgba(0, 0, 0, 0.15);
+
+  /* Header helpers */
+  --header-top: var(--brand-green-light);
+  --header-bottom: var(--brand-green-dark);
+  --header-line: var(--brand-gold);
+}
+
 /* =====================================================
   System UI Core Colors - Light Mode
+  Move light-specific tokens under `.light` to avoid
+  clashing with `:root` and allow toggling `.dark`/.light
 ===================================================== */
-:root {
-  /* Light mode colors */
+.light {
   --bg-0: #ffffff;
   --bg-1: #f9fafb;
   --bg-2: #f3f4f6;
@@ -14,20 +37,10 @@
   --text-muted: #6b7280;
   --text-disabled: #9ca3af;
 
-  /* Brand colors remain the same */
-  --brand-green-light: #2a6a37;
-  --brand-green-dark: #1f4d29;
-  --brand-gold: #d4af37;
-  --brand-gold-hover: #c59b2f;
-
   --success: #22c55e;
   --warning: #eab308;
   --danger: #ef4444;
   --info: #38bdf8;
-
-  --header-top: var(--brand-green-light);
-  --header-bottom: var(--brand-green-dark);
-  --header-line: var(--brand-gold);
 
   --btn-primary: var(--brand-gold);
   --btn-primary-hover: var(--brand-gold-hover);
@@ -42,14 +55,6 @@
   --btn-text-secondary: #1f2937;
   --btn-text-tertiary: #1f2937;
 
-  --focus-ring: rgba(212, 175, 55, 0.35);
-  --overlay: rgba(0, 0, 0, 0.6);
-  --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  --overlay-05: rgba(0, 0, 0, 0.05);
-  --overlay-10: rgba(0, 0, 0, 0.1);
-  --overlay-15: rgba(0, 0, 0, 0.15);
-
   --btn-tertiary-border: var(--overlay-10);
   --btn-tertiary-border-hover: var(--overlay-15);
   --btn-tertiary-hover-bg: var(--overlay-05);
@@ -61,6 +66,7 @@
 /* =====================================================
   System UI Core Colors - Dark Mode
 ===================================================== */
+
 .dark {
   --bg-0: #0f1113;
   --bg-1: #161a1d;

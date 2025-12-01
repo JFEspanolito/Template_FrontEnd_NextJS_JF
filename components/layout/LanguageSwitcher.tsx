@@ -7,7 +7,7 @@ export function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <div className="fixed top-2 left-1/2 -translate-x-1/2 z-[60]">
+    <div className="fixed top-2 left-1/2 -translate-x-1/2 z-60">
       <div className="flex items-center gap-1 bg-black/60 backdrop-blur-md border border-neutral-700/40 rounded-full p-1 h-[38px]">
         <button
           onClick={() => setLanguage("ES")}
@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
           {language === "ES" && (
             <motion.div
               layoutId="activeLanguage"
-              className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"
+              className="absolute inset-0 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}
@@ -38,7 +38,7 @@ export function LanguageSwitcher() {
           {language === "EN" && (
             <motion.div
               layoutId="activeLanguage"
-              className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"
+              className="absolute inset-0 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}

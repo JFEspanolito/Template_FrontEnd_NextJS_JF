@@ -1,83 +1,69 @@
-// Actualizar los siguientes campos:
-// <PROJECT_NAME>
-// <PROJECT_DESCRIPTION>
-// <PROJECT_DOMAIN>
-// <PROJECT_SUPPORT_EMAIL>
-// <PROJECT_TAGLINE>
-
 const config = {
   // ======================================================
-  // 🔧 PROYECTO BASE (reemplaza estos placeholders)
+  // 🔧 PROYECTO BASE (placeholders)
   // ======================================================
-  appName: "<PROJECT_NAME>",
-  appDescription: "<PROJECT_DESCRIPTION>",
-  domainName: "<PROJECT_DOMAIN>", // sin https:// ni slash final
+  appName: "PLACEHOLDER_APP_NAME",
+  appDescription: "PLACEHOLDER_APP_DESCRIPTION",
+  domainName: "example.com",
 
   // ======================================================
-  // 💬 SOPORTE / CONTACTO
+  // 🌐 METADATOS / SEO (placeholders)
+  // ======================================================
+  language: "en-US",
+  themeColor: "#000000",
+  keywords: ["placeholder", "example"],
+  author: "PLACEHOLDER_AUTHOR",
+  twitter: "@PLACEHOLDER",
+  // keep a valid URL so code that does `new URL(config.siteUrl)` won't throw
+  siteUrl: "https://example.com",
+
+  // Rutas hacia imágenes base (placeholders)
+  images: {
+    ogDefault: "/images/placeholder.webp",
+    twitterCard: "/images/placeholder.webp",
+    favicon: "/favicon.ico",
+    icon16: "/favicon.ico",
+    icon32: "/favicon.ico",
+    icon192: "/images/placeholder-192.png",
+    icon512: "/images/placeholder-512.png",
+    appleTouch: "/images/placeholder-apple.png",
+    safariMask: "/images/placeholder-mask.png",
+  },
+
+  // ======================================================
+  // 💬 SOPORTE / CONTACTO (placeholders)
   // ======================================================
   crisp: {
-    id: "", // ID de Crisp (opcional)
-    onlyShowOnRoutes: ["/"], // o elimina esta línea para mostrar en todo el sitio
+    id: "",
+    onlyShowOnRoutes: ["/"],
   },
 
   resend: {
-    fromNoReply: `<PROJECT_NAME> <noreply@resend.<PROJECT_DOMAIN>>`,
-    fromAdmin: `Admin at <PROJECT_NAME> <admin@resend.<PROJECT_DOMAIN>>`,
-    supportEmail: "<PROJECT_SUPPORT_EMAIL>",
+    fromNoReply: `no-reply@example.com`,
+    fromAdmin: `Admin <no-reply@example.com>`,
+    supportEmail: "support@example.com",
   },
 
   // ======================================================
-  // 📣 MARKETING
+  // 📣 MARKETING (placeholders)
   // ======================================================
   marketing: {
-    tagline: "<PROJECT_TAGLINE>", // breve eslogan del proyecto
+    tagline: "PLACEHOLDER_TAGLINE",
     testimonials: {
-      headline: "X users are already building with <PROJECT_NAME>!",
-      subhead: "Short supportive line about social proof.",
-      items: [
-        /* objetos como en defaultList */
-      ],
+      headline: "PLACEHOLDER_TESTIMONIAL_HEADLINE",
+      subhead: "PLACEHOLDER_TESTIMONIAL_SUBHEAD",
+      items: [],
     },
   },
+
   // ======================================================
-  // 💰 PLANES / STRIPE
+  // 🔗 REDES SOCIALES (para JSON-LD) - placeholders
   // ======================================================
-  stripe: {
-    plans: [
-      {
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "<STRIPE_TEST_PRICE_ID>"
-            : "<STRIPE_PROD_PRICE_ID>",
-        name: "Starter",
-        description: "Perfect for small projects",
-        price: 79,
-        priceAnchor: 99,
-        features: [
-          { name: "Feature 1" },
-          { name: "Feature 2" },
-          { name: "Feature 3" },
-        ],
-      },
-      {
-        isFeatured: true,
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "<STRIPE_TEST_PRICE_ID_2>"
-            : "<STRIPE_PROD_PRICE_ID_2>",
-        name: "Advanced",
-        description: "For growing projects",
-        price: 99,
-        priceAnchor: 149,
-        features: [
-          { name: "Feature 1" },
-          { name: "Feature 2" },
-          { name: "Feature 3" },
-          { name: "Priority support" },
-        ],
-      },
-    ],
+  socials: {
+    github: "https://github.com/placeholder",
+    linkedin: "https://linkedin.com/placeholder",
+    twitter: "https://twitter.com/placeholder",
+    instagram: "https://instagram.com/placeholder",
   },
 };
 
