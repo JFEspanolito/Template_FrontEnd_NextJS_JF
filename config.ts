@@ -11,6 +11,12 @@ const config = {
   // ======================================================
   language: "en-US",
   themeColor: "#000000",
+  // Color tokens used across the app (placeholders)
+  colors: {
+    main: "#111111",
+    background: "#000000",
+    foreground: "#ffffff",
+  },
   keywords: ["placeholder", "example"],
   author: "PLACEHOLDER_AUTHOR",
   twitter: "@PLACEHOLDER",

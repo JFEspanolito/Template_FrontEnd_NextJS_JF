@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import config from "@/config";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { SignInModalButton } from "@/components/auth/SignInForm";
 
 const links = [
   {
@@ -22,12 +23,6 @@ const links = [
   },
 ];
 
-const cta = (
-  <Link href="/signin" className="btn btn-primary">
-    Get Started
-  </Link>
-);
-
 export function Header() {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +34,10 @@ export function Header() {
   return (
     <header
       className="sticky top-0 z-50 flex w-full items-center justify-center font-sans dark"
-      style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
+      style={{
+        backgroundColor: "var(--background)",
+        color: "var(--foreground)",
+      }}
     >
       <nav
         className="container flex items-center justify-between px-8 py-4 mx-auto w-full max-w-7xl"
@@ -60,7 +58,9 @@ export function Header() {
               width={32}
               height={32}
             />
-            <span className="font-extrabold text-lg whitespace-nowrap">{config.appName}</span>
+            <span className="font-extrabold text-lg whitespace-nowrap">
+              {config.appName}
+            </span>
           </Link>
         </div>
         {/* Burger button to open menu on mobile */}
@@ -103,7 +103,9 @@ export function Header() {
         </div>
 
         {/* CTA on large screens */}
-        <div className="hidden lg:flex lg:justify-end lg:flex-1">{cta}</div>
+        <div className="hidden lg:flex lg:justify-end lg:flex-1">
+          <SignInModalButton label="Get Started" />
+        </div>
       </nav>
 
       {/* Selector de idioma */}
@@ -113,7 +115,10 @@ export function Header() {
       <div className={`relative z-50 ${isOpen ? "" : "hidden"}`}>
         <div
           className={`fixed inset-y-0 right-0 z-10 w-full px-8 py-4 overflow-y-auto sm:max-w-sm sm:ring-1 sm:ring-neutral/10 transform origin-right transition ease-in-out duration-300`}
-          style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
+          style={{
+            backgroundColor: "var(--background)",
+            color: "var(--foreground)",
+          }}
         >
           {/* Your logo/name on small screens */}
           <div className="flex items-center justify-between">
@@ -123,7 +128,7 @@ export function Header() {
               href="/"
             >
               <Image
-                src="/icon.webp"
+                src="/favicon.ico"
                 alt={`${config.appName} logo`}
                 className="w-8"
                 priority={true}
@@ -173,10 +178,12 @@ export function Header() {
             </div>
             <div className="divider"></div>
             {/* Your CTA on small screens */}
-            <div className="flex flex-col">{cta}</div>
+            <div className="flex flex-col">
+              <SignInModalButton label="Get Started" />
+            </div>
           </div>
         </div>
       </div>
     </header>
   );
-};
+}
