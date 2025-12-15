@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import config from "@/config";
+import config from "@/data/configProject";
 
 export default function Home() {
   const router = useRouter();

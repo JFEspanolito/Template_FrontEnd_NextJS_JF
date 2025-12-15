@@ -1,29 +1,27 @@
-const config = {
+const configProject = {
   // ======================================================
-  // 🔧 PROYECTO BASE (placeholders)
+  // 🧩 PROYECTO (metadata / web)
   // ======================================================
-  appName: "PLACEHOLDER_APP_NAME",
-  appDescription: "PLACEHOLDER_APP_DESCRIPTION",
-  domainName: "example.com",
+  appName: process.env.NEXT_PUBLIC_APP_NAME || "<Place holder>",
+  appDescription: process.env.NEXT_PUBLIC_APP_DESCRIPTION || "<Place holder>",
+  domainName: process.env.NEXT_PUBLIC_DOMAIN_NAME || "website.placeholder.com",
+  siteUrl: process.env.SITE_URL || "http://localhost:3000",
 
   // ======================================================
-  // 🌐 METADATOS / SEO (placeholders)
+  // 🌐 METADATOS / SEO
   // ======================================================
   language: "en-US",
   themeColor: "#000000",
-  // Color tokens used across the app (placeholders)
   colors: {
     main: "#111111",
     background: "#000000",
     foreground: "#ffffff",
   },
   keywords: ["placeholder", "example"],
-  author: "PLACEHOLDER_AUTHOR",
-  twitter: "@PLACEHOLDER",
-  // keep a valid URL so code that does `new URL(config.siteUrl)` won't throw
-  siteUrl: "https://example.com",
+  author: "<Place holder>",
+  twitter: "@<Place holder>",
 
-  // Rutas hacia imágenes base (placeholders)
+  // Rutas hacia imágenes base
   images: {
     ogDefault: "/images/placeholder.webp",
     twitterCard: "/images/placeholder.webp",
@@ -37,33 +35,22 @@ const config = {
   },
 
   // ======================================================
-  // 💬 SOPORTE / CONTACTO (placeholders)
+  // 💬 SOPORTE / CONTACTO (público)
   // ======================================================
-  crisp: {
-    id: "",
-    onlyShowOnRoutes: ["/"],
+  support: {
+    email: process.env.NEXT_PUBLIC_RESEND_SUPPORT_EMAIL || "correo@placeholder.com",
   },
 
+  // ======================================================
+  // ✉️ RESEND (client-side references)
+  // ======================================================
   resend: {
-    fromNoReply: `no-reply@example.com`,
-    fromAdmin: `Admin <no-reply@example.com>`,
-    supportEmail: "support@example.com",
+    fromAdmin: process.env.NEXT_PUBLIC_RESEND_FROM_ADMIN || "admin@placeholder.com",
+    fromNoReply: process.env.NEXT_PUBLIC_RESEND_FROM_NO_REPLY || "noreply@placeholder.com",
   },
 
   // ======================================================
-  // 📣 MARKETING (placeholders)
-  // ======================================================
-  marketing: {
-    tagline: "PLACEHOLDER_TAGLINE",
-    testimonials: {
-      headline: "PLACEHOLDER_TESTIMONIAL_HEADLINE",
-      subhead: "PLACEHOLDER_TESTIMONIAL_SUBHEAD",
-      items: [],
-    },
-  },
-
-  // ======================================================
-  // 🔗 REDES SOCIALES (para JSON-LD) - placeholders
+  // 🔗 REDES SOCIALES (para JSON-LD)
   // ======================================================
   socials: {
     github: "https://github.com/placeholder",
@@ -71,6 +58,18 @@ const config = {
     twitter: "https://twitter.com/placeholder",
     instagram: "https://instagram.com/placeholder",
   },
+
+  // ======================================================
+  // 📣 MARKETING (placeholders)
+  // ======================================================
+  marketing: {
+    tagline: "<Place holder>",
+    testimonials: {
+      headline: "<Place holder>",
+      subhead: "<Place holder>",
+      items: [],
+    },
+  },
 };
 
-export default config;
+export default configProject;

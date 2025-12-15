@@ -4,23 +4,22 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import config from "@/config";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import config from "@/data/configProject";
 import { SignInModalButton } from "@/components/auth/SignInForm";
 import ThemeToggle from "@/components/buttons/ThemeToggle";
 
 const links = [
   {
-    href: "/#pricing",
-    label: "Pricing",
+    href: "/#Menu1",
+    label: "Menu 1",
   },
   {
-    href: "/#testimonials",
-    label: "Reviews",
+    href: "/#Menu2",
+    label: "Menu 2",
   },
   {
-    href: "/#faq",
-    label: "FAQ",
+    href: "/#Menu3",
+    label: "Menu 3",
   },
 ];
 
@@ -106,12 +105,9 @@ export function Header() {
         {/* CTA on large screens */}
         <div className="hidden lg:flex lg:justify-end lg:flex-1 items-center gap-4">
           <ThemeToggle />
-          <SignInModalButton label="Get Started" />
+          <SignInModalButton label="Log In" />
         </div>
       </nav>
-
-      {/* Selector de idioma */}
-      {/* <LanguageSwitcher /> */}
 
       {/* Mobile menu, show/hide based on menu state. */}
       <div className={`relative z-50 ${isOpen ? "" : "hidden"}`}>
@@ -182,7 +178,7 @@ export function Header() {
             {/* Your CTA on small screens */}
             <div className="flex flex-col gap-3">
               <ThemeToggle />
-              <SignInModalButton label="Get Started" />
+              <SignInModalButton label="Log In" />
             </div>
           </div>
         </div>

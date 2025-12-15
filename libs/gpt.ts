@@ -53,7 +53,7 @@ export const sendOpenAi = async (
     console.log("\n");
 
     return answer;
-  } catch (e) {
+  } catch (e: any) {
     console.error("GPT Error: " + e?.response?.status, e?.response?.data);
     return null;
   }

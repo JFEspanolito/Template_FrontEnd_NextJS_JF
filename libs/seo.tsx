@@ -1,4 +1,4 @@
-import config from "@/config";
+import config from "@/data/configProject";
 import { Metadata } from "next";
 
 interface OpenGraphParams {
