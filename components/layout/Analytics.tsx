@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import config from "@/config";
+import configProject from "@/data/configProject";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -215,9 +215,9 @@ export default function Analytics() {
     // Contacto oficial
     console.log(
       "%cPara cualquier duda o apoyo, escribe a: " + ${JSON.stringify(
-        config.resend.supportEmail
+        configProject.support.email
       )} + "\\n" +
-      "Atentamente: Equipo de " + ${JSON.stringify(config.appName)},
+      "Atentamente: Equipo de " + ${JSON.stringify(configProject.appName)},
       "font-size:16px;line-height:1.5;color:white;text-shadow:1px 1px 0 #000;"
     );
   }

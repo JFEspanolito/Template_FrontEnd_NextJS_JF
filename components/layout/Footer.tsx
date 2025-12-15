@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import config from "@/config";
+import config from "@/data/configProject";
 
 export function Footer() {
   const year = new Date().getFullYear();

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
-import config from "@/config";
+import configProject from "@/data/configProject";
+import configApi from "@/configApi.js"
 
 const apiClient = axios.create({
   baseURL: "/api",
@@ -16,7 +17,7 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401) {
       toast.error("Please login");
-      return signIn(undefined, { callbackUrl: config.auth.callbackUrl });
+      return signIn(undefined, { callbackUrl: configApi.auth.callbackUrl });
     } else if (error.response?.status === 403) {
       message = "Pick a plan to use this feature";
     } else {

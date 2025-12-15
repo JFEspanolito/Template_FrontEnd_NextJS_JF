@@ -2,16 +2,17 @@ import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { NextAuthOptions } from "next-auth";
-import config from "@/config";
+import configApi from "@/configApi.js";
 import connectMongo from "./mongo";
-const MONGODB_URI = process.env.MONGODB_URI;
 import User from "@/models/User";
+import configProject from "@/data/configProject";
 
-// Read env vars once and conditionally add providers to avoid passing `undefined` to provider configs
+// Read env vars once and conditionally add providers to avoid passing `undefined` to provider configApis
 const GOOGLE_ID = process.env.GOOGLE_ID;
 const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || "";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const providers: any[] = [];
 
@@ -45,7 +46,7 @@ if (MONGODB_URI && RESEND_API_KEY) {
           pass: RESEND_API_KEY,
         },
       },
-      from: config.resend.fromNoReply,
+      from: configApi.resend.fromNoReply,
     })
   );
 }
@@ -108,10 +109,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   theme: {
-    brandColor: config.colors.main,
+    brandColor: configProject.colors.main,
     // Add you own logo below. Recommended size is rectangle (i.e. 200x50px) and show your logo + name.
     // It will be used in the login flow to display your logo. If you don't add it, it will look faded.
-    logo: `https://${config.domainName}/logoAndName.webp`,
+    logo: `https://${configProject.domainName}/logoAndName.webp`,
   },
 };
 

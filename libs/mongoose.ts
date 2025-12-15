@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const connectMongo = async (): Promise<typeof mongoose | undefined> => {
+const connectMongo = async (): Promise<typeof mongoose | void> => {
   if (!process.env.MONGODB_URI) {
     throw new Error(
       "Add the MONGODB_URI environment variable inside .env.local to use mongoose"

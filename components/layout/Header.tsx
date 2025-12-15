@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import config from "@/config";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import config from "@/data/configProject";
 import { SignInModalButton } from "@/components/auth/SignInForm";
 import ThemeToggle from "@/components/buttons/ThemeToggle";
 
