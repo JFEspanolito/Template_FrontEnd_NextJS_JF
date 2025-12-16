@@ -7,7 +7,7 @@ import Image from "next/image";
 import config from "@/data/configProject";
 import { SignInModalButton } from "@/components/auth/SignInForm";
 import ThemeToggle from "@/components/buttons/ThemeToggle";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { LanguageSwitcher } from "@/layout/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Header() {
