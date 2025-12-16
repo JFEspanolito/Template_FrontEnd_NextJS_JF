@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import config from "@/data/configProject";
+import configProject from "@/data/configProject";
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +18,9 @@ export default function Home() {
         color: "var(--foreground)",
       }}
     >
-      Welcome to {config.appName}
+      Welcome to {configProject.appName}
+
     </div>
+
   );
 }

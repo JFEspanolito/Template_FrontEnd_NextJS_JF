@@ -7,25 +7,28 @@ import Image from "next/image";
 import config from "@/data/configProject";
 import { SignInModalButton } from "@/components/auth/SignInForm";
 import ThemeToggle from "@/components/buttons/ThemeToggle";
-
-const links = [
-  {
-    href: "/#Menu1",
-    label: "Menu 1",
-  },
-  {
-    href: "/#Menu2",
-    label: "Menu 2",
-  },
-  {
-    href: "/#Menu3",
-    label: "Menu 3",
-  },
-];
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Header() {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const links = [
+    {
+      href: "/#Menu1",
+      label: t("menu1"),
+    },
+    {
+      href: "/#Menu2",
+      label: t("menu2"),
+    },
+    {
+      href: "/#Menu3",
+      label: t("menu3"),
+    },
+  ];
 
   useEffect(() => {
     setIsOpen(false);
@@ -103,9 +106,16 @@ export function Header() {
         </div>
 
         {/* CTA on large screens */}
-        <div className="hidden lg:flex lg:justify-end lg:flex-1 items-center gap-4">
-          <ThemeToggle />
-          <SignInModalButton label="Log In" />
+        <div className="hidden lg:flex lg:justify-end lg:flex-1 items-center gap-3">
+          <div className="h-10 flex items-center">
+            <SignInModalButton label={t("logIn")} />
+          </div>
+          <div className="h-10 flex items-center">
+            <LanguageSwitcher />
+          </div>
+          <div className="h-10 flex items-center">
+            <ThemeToggle />
+          </div>
         </div>
       </nav>
 
@@ -177,8 +187,15 @@ export function Header() {
             <div className="divider"></div>
             {/* Your CTA on small screens */}
             <div className="flex flex-col gap-3">
-              <ThemeToggle />
-              <SignInModalButton label="Log In" />
+              <div className="h-10 flex items-center w-full">
+                <LanguageSwitcher />
+              </div>
+              <div className="h-10 flex items-center w-full">
+                <ThemeToggle />
+              </div>
+              <div className="h-10 flex items-center w-full">
+                <SignInModalButton label={t("logIn")} />
+              </div>
             </div>
           </div>
         </div>
