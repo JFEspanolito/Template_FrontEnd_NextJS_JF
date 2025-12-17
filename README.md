@@ -1,60 +1,133 @@
-# MyNextJFTemplate
+# Template_FrontEnd_NextJS_JF
 
-Boilerplate minimal para **Next.js 16 (App Router)** con:
+Boilerplate minimal para **Next.js 16.x (App Router)** y **React 19.x**, actualizado a versiones recientes para mitigar vulnerabilidades conocidas, con enfoque en escalabilidad y reutilización.
 
-* TypeScript
-* Tailwind CSS + DaisyUI
-* Autenticación con NextAuth
-* MongoDB/Mongoose
-* Language toggle (i18n simple por contexto)
-* Theme switch (modo claro/oscuro)
-* Componentes reutilizables y estructura escalable
+- TypeScript
+- Tailwind CSS + DaisyUI
+- Autenticación con **NextAuth.js v4**
+- MongoDB / Mongoose
+- Language toggle (i18n simple por contexto)
+- Theme switch (modo claro / oscuro)
+- Componentes reutilizables y estructura modular
 
 ---
 
 ## ⚙️ Stack
 
-* **Framework:** Next.js 16 (App Router + Turbopack)
-* **Lenguaje:** TypeScript
-* **UI:** Tailwind CSS + DaisyUI
-* **Auth:** NextAuth.js
-* **DB:** MongoDB + Mongoose
-* **Email / Payments:** Resend, Stripe (opcional)
+- **Framework:** Next.js 16.x (App Router)
+- **UI Runtime:** React 19.x
+- **Lenguaje:** TypeScript
+- **Estilos:** Tailwind CSS + DaisyUI
+- **Auth:** NextAuth.js v4 (`next-auth`)
+- **DB:** MongoDB + Mongoose
+- **Email:** Resend (opcional)
+- **Payments:** Stripe (opcional)
+- **UX / UI Utils:** Framer Motion, Lucide Icons, Hot Toast
+- **Infra / SEO:** next-sitemap
+- **Theming:** next-themes
+- **Extras:** Top loader, tooltips, syntax highlighting
 
 ---
+
+## 📦 Dependencias clave reflejadas
+
+- `next@16.x`
+- `react@19.x`
+- `next-auth@4.x`
+- `mongodb@7.x`
+- `mongoose@9.x`
+- `tailwindcss@4.x`
+- `daisyui@5.x`
+- `resend`
+- `stripe`
+- `framer-motion`
+- `next-sitemap`
+- `nextjs-toploader`
+- `react-hot-toast`
+- `lucide-react`
+- `crisp-sdk-web` (si se habilita chat)
+
+---
+
+## ⚠️ Nota sobre autenticación
+
+Este template está diseñado sobre **NextAuth.js v4**.  
+Aunque se incluye `@auth/mongodb-adapter`, el flujo principal no está migrado a Auth.js v5.
+
+---
+
+## 🎯 Objetivo del template
+
+Base moderna y mantenible para:
+
+- Landing pages
+- Dashboards privados
+- Proyectos SaaS
+- Portfolios técnicos
+- Apps con autenticación, pagos y SEO listos desde el inicio
+
+Optimizado para evolución rápida sin deuda estructural.
 
 ## 📁 Estructura básica
 
 📁 **Estructura básica**
 
-```txt
+```
 app/
- ├─ api/                  # Rutas API
- │   └─ ...
- ├─ error.tsx
- ├─ layout.tsx            # Layout global
- ├─ not-found.tsx         # 404
- └─ page.tsx              # Home
+ ├─ (pages)/               # Rutas públicas agrupadas
+ │   ├─ Contact/
+ │   └─ FAQ/
+ │
+ ├─ (private)/             # Rutas protegidas (auth requerida)
+ │   ├─ admin/
+ │   │   ├─ dashboard/
+ │   │   ├─ settings/
+ │   │   └─ users/
+ │   └─ dashboard/
+ │       ├─ profile/
+ │       └─ settings/
+ │
+ ├─ api/                   # API Routes (App Router)
+ │   ├─ admin/
+ │   │   ├─ dashboard/
+ │   │   └─ users/
+ │   │       └─ [id]/
+ │   │
+ │   ├─ auth/
+ │   │   ├─ providers-status/
+ │   │   └─ [...nextauth]/
+ │   │
+ │   ├─ lead/              # Captura de leads
+ │   ├─ stripe/
+ │   │   ├─ create-checkout/
+ │   │   └─ create-portal/
+ │   └─ webhook/
+ │       └─ stripe/
+ │
+ ├─ error.tsx              # Error boundary global
+ ├─ layout.tsx             # Layout raíz
+ ├─ not-found.tsx          # 404
+ └─ page.tsx               # Home
 
 components/
- ├─ auth/
- ├─ buttons/
- ├─ icons/
- ├─ layout/               # Nav, Footer, Layouts
- ├─ pagination/
- ├─ sections/
- └─ ui/                   # Componentes adaptados de ScrollX UI
+ ├─ auth/                  # Componentes de autenticación
+ ├─ buttons/               # Botones reutilizables
+ ├─ icons/                 # Iconografía SVG
+ ├─ pagination/            # Paginación
+ └─ ui/                    # UI base (adaptados de ScrollX UI)
+
+sections/                  # Secciones de páginas (Hero, About, CTA, etc.)
 
 contexts/
- ├─ LanguageContext.tsx   # Toggle idioma
- └─ ThemeContext.tsx      # Toggle tema
+ ├─ LanguageContext.tsx    # i18n por contexto
+ └─ ThemeContext.tsx       # Tema claro / oscuro
 
 data/
- └─ about.js              # Datos de perfil (ES/EN)
+ └─ about.js               # Contenido del perfil ES / EN
 
 libs/
  ├─ api.ts
- ├─ gpt.ts                # Opcional
+ ├─ gpt.ts                 # Opcional
  ├─ mongo.ts
  ├─ mongoose.ts
  ├─ next-auth.ts
@@ -63,11 +136,13 @@ libs/
  └─ stripe.ts
 
 models/
- └─ User.ts
+ ├─ User.ts
+ └─ plugins/               # Plugins / helpers de Mongoose
+
+layout/                    # Layouts compuestos (dashboard, admin, etc.)
 
 public/
- ├─ icons/
- └─ favicon.ico
+ └─ icons/                 # Íconos públicos
 
 scripts/
  ├─ convert_pdf_to_jpg.js
@@ -77,7 +152,7 @@ scripts/
 styles/
  └─ globals.css
 
-config.js                 # Configuración global del proyecto
+config.js                  # Configuración global del proyecto
 ```
 
 Alias de rutas configurado con `@/`.
@@ -95,9 +170,9 @@ Los componentes del directorio `components/ui` están inspirados y adaptados a p
 
 ## ✅ Requisitos
 
-* Node.js 18+
-* pnpm (recomendado)
-* MongoDB si usas auth/db
+- Node.js **18+** (recomendado 20 LTS)
+- pnpm **9+** (gestor de paquetes)
+- MongoDB **6+** (solo si usas autenticación o persistencia)
 
 ---
 
@@ -105,7 +180,7 @@ Los componentes del directorio `components/ui` están inspirados y adaptados a p
 
 Clonar e instalar:
 
-```bash
+```
 git clone https://github.com/JFEspanolito/MyNextJFTemplate.git
 cd MyNextJFTemplate
 pnpm install
@@ -113,271 +188,134 @@ pnpm install
 
 Variables de entorno:
 
-```bash
+```
 cp .env.example .env.local
 ```
 
 Editar `.env.local`:
 
-```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=tu-secret
-MONGODB_URI=uri
-
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-
-STRIPE_SECRET_KEY=...
-STRIPE_WEBHOOK_SECRET=...
-RESEND_API_KEY=...
-```
-
 Desarrollo:
 
-```bash
+```
 pnpm dev
 ```
 
 Producción:
 
-```bash
+```
 pnpm build
 pnpm start
 ```
 
-Lint:
+---
 
-```bash
-pnpm lint
-```
+## 🧩 Configuración del proyecto (`configApi.js` + `configProject.ts`)
+
+La configuración del template se divide por responsabilidad en **dos archivos principales**:
+
+1. `configApi.js` – configuración **server-side** (API, autenticación, pagos, integraciones).
+2. `configProject.ts` – configuración **del proyecto / frontend** (branding, SEO, metadata, marketing).
 
 ---
 
-## 🧩 Configuración del proyecto (`config.js` + `about.js`)
+### `configApi.js` — Configuración de backend / server
 
-En esta plantilla manejo la configuración en **dos archivos principales**:
+Archivo destinado exclusivamente a **integraciones y lógica de servidor**.  
+Aquí viven las configuraciones que normalmente dependen de secretos, tokens o credenciales.
 
-1. `config.js` – donde defino la configuración global del proyecto (branding, SEO, dominio, imágenes, contacto, marketing, redes del proyecto, etc.).
-2. `about.js` – donde declaro los datos de perfil en ES/EN (texto de la sección About, enlaces de contacto, redes personales e imágenes asociadas).
+Incluye, entre otros:
 
-Ambos archivos vienen con valores de ejemplo y placeholders para que puedas ver cómo está conectado todo. La idea es que tomes estos archivos como punto de partida y los adaptes a tu proyecto o a tu perfil.
+- NextAuth (server)
+- OAuth (Google)
+- MongoDB
+- Stripe (keys y webhooks)
+- Resend (API key)
+- AWS / Crisp (si aplica)
+- Validación de variables obligatorias (`requireEnv`)
 
----
+Regla:
 
-### `config.js` — Cómo uso la configuración global
-
-En `config.js` concentro todo lo que considero “config del proyecto”, no del usuario. Ahí defino:
-
-* **Base del proyecto**
-
-  ```js
-  appName: "PLACEHOLDER_APP_NAME",
-  appDescription: "PLACEHOLDER_APP_DESCRIPTION",
-  domainName: "example.com",
-  ```
-
-  Aquí suelo poner el nombre comercial del proyecto, una descripción corta orientada a SEO y el dominio principal que voy a usar en producción.
-
-* **Metadatos / SEO y aspecto general**
-
-  ```js
-  language: "en-US",
-  themeColor: "#000000",
-  colors: {
-    main: "#111111",
-    background: "#000000",
-    foreground: "#ffffff",
-  },
-  keywords: ["placeholder", "example"],
-  author: "PLACEHOLDER_AUTHOR",
-  twitter: "@PLACEHOLDER",
-  siteUrl: "https://example.com",
-  ```
-
-  Estos campos los utilizo para generar metadatos, JSON-LD y para unificar colores base en la app. `siteUrl` siempre lo dejo como una URL válida porque hay código que hace `new URL(config.siteUrl)`.
-
-* **Imágenes globales**
-
-  ```js
-  images: {
-    ogDefault: "/images/placeholder.webp",
-    twitterCard: "/images/placeholder.webp",
-    favicon: "/favicon.ico",
-    icon16: "/favicon.ico",
-    icon32: "/favicon.ico",
-    icon192: "/images/placeholder-192.png",
-    icon512: "/images/placeholder-512.png",
-    appleTouch: "/images/placeholder-apple.png",
-    safariMask: "/images/placeholder-mask.png",
-  },
-  ```
-
-  Desde aquí obtengo las rutas para todas las imágenes que se usan en meta tags, manifest y PWA (favicons, iconos, OG, etc.). Cuando monto un proyecto real, normalmente solo cambio estas rutas una vez y listo.
-
-* **Soporte, emails y chat**
-
-  ```js
-  crisp: {
-    id: "",
-    onlyShowOnRoutes: ["/"],
-  },
-
-  resend: {
-    fromNoReply: "no-reply@example.com",
-    fromAdmin: "Admin <no-reply@example.com>",
-    supportEmail: "support@example.com",
-  },
-  ```
-
-  Estos valores los uso para integrar chat (Crisp) y envío de correos con Resend. Si no necesitas alguna integración, puedes dejarlo vacío o adaptarlo a tu proveedor.
-
-* **Marketing y textos de landing**
-
-  ```js
-  marketing: {
-    tagline: "PLACEHOLDER_TAGLINE",
-    testimonials: {
-      headline: "PLACEHOLDER_TESTIMONIAL_HEADLINE",
-      subhead: "PLACEHOLDER_TESTIMONIAL_SUBHEAD",
-      items: [],
-    },
-  },
-  ```
-
-  Aquí centralizo textos que suelen terminar en el hero de la landing o en secciones de testimonios. Prefiero tenerlo en config para que no estén dispersos entre componentes.
-
-* **Redes sociales del proyecto**
-
-  ```js
-  socials: {
-    github: "https://github.com/placeholder",
-    linkedin: "https://linkedin.com/placeholder",
-    twitter: "https://twitter.com/placeholder",
-    instagram: "https://instagram.com/placeholder",
-  },
-  ```
-
-  Estas URLs las uso principalmente en JSON-LD y en secciones donde quiero enlazar las redes “oficiales” del proyecto, no necesariamente las personales.
-
-En resumen: cuando quiero adaptar esta plantilla a un nuevo proyecto, empiezo por `config.js` y actualizo nombre, dominio, descripción, metadatos, imágenes, emails y redes. Con eso, gran parte del branding queda resuelto.
+> Todo lo que requiera seguridad o solo deba ejecutarse en el servidor va aquí.
 
 ---
 
-### `about.js` — Cómo gestiono el contenido del perfil (ES/EN)
+### `configProject.ts` — Configuración del proyecto / frontend
 
-En `data/about.js` dejo definido un objeto `aboutData` que uso para poblar la sección “About” en dos idiomas:
+Archivo que define **la identidad y comportamiento visual del proyecto**.  
+No consume variables de entorno: todos los valores son **placeholders editables directamente**.
 
-```js
-export const aboutData = {
-  ES: [ /* ... */ ],
-  EN: [ /* ... */ ],
-};
-```
+Se utiliza para centralizar:
 
-Cada entrada tiene esta estructura general:
+- **Branding del proyecto**
 
-* Datos básicos:
+  - `appName`
+  - `appDescription`
+  - `domainName`
+  - `siteUrl`
 
-  ```js
-  {
-    name: "place holder text",
-    nickname: "place holder text",
-    role: "place holder text",
-    callToAction: "place holder text",
-    headline: "place holder text",
-    location: "place holder text",
-    // ...
-  }
-  ```
+- **SEO y metadata**
 
-* Descripción en bloques (permite texto enriquecido: negritas, colores, etc.):
+  - idioma
+  - colores base
+  - keywords
+  - autor
+  - cuenta de Twitter
 
-  ```js
-  description: [
-    [
-      {
-        text: "place holder text",
-        bold: false,
-        customColor: "",
-      },
-    ],
-  ],
-  ```
+- **Imágenes globales**
 
-* Contacto:
+  - Open Graph
+  - Twitter Card
+  - favicons
+  - assets PWA
 
-  ```js
-  contact: [
-    {
-      name: "LinkedIn",
-      url: "https://www.linkedin.com/in/jfespanolito",
-      icon: "linkedin",
-    },
-    {
-      name: "Telegram",
-      url: "https://t.me/jfespanolito",
-      icon: "telegram",
-    },
-    {
-      name: "Email",
-      url: "mailto:contact@jfespanolito.dev?subject=Contacto%20profesional&body=Hola%20Jorge,%0A%0AQuisiera%20hablar%20sobre%20...",
-      icon: "mail",
-    },
-  ],
-  ```
+- **Contacto público**
 
-* Redes personales:
+  - email de soporte
+  - remitentes visibles de email
 
-  ```js
-  social: [
-    {
-      name: "GitHub",
-      url: "https://github.com/JFEspanolito",
-      icon: "github",
-    },
-    {
-      name: "Wakatime",
-      url: "https://wakatime.com/@JFEspanolito",
-      icon: "wakaTime",
-    },
-  ],
-  ```
+- **Redes sociales**
 
-* Imágenes específicas del perfil:
+  - usadas en JSON-LD y secciones públicas
 
-  ```js
-  avatarUrl: "/images/JFSelfie.webp",
-  logoUrl: "/images/JFLogo.webp",
-  ```
+- **Marketing**
+  - tagline
+  - testimonios
 
-En la versión de ejemplo he dejado algunos enlaces reales para que veas cómo se usa, pero la idea es que tú reemplaces:
+Todos los valores vienen como placeholders y están pensados para ser reemplazados al iniciar un proyecto nuevo, sin tocar componentes ni lógica.
 
-* Todos los `"place holder text"`.
-* Los URLs de contacto/social por tus propios enlaces.
-* Las rutas de `avatarUrl` y `logoUrl` por imágenes tuyas.
+Regla:
 
-A partir de ahí, los componentes consumen `aboutData.ES` o `aboutData.EN` según el idioma activo (apoyándose en el `LanguageContext`), así que no necesitas duplicar lógica en los componentes para cambiar de idioma o de contenido.
+> Todo lo que defina identidad, copy, SEO o apariencia del proyecto vive en `configProject.ts`.
 
 ---
 
 ### Referencia rápida de campos que suelo modificar
 
-| Archivo   | Clave / Placeholder          | Uso principal                               |
-| --------- | ---------------------------- | ------------------------------------------- |
-| config.js | `appName`                    | Nombre de la app para SEO y branding        |
-| config.js | `appDescription`             | Descripción corta para `<meta description>` |
-| config.js | `domainName` / `siteUrl`     | Dominio público y URL base del proyecto     |
-| config.js | `author`                     | Autor en metadatos / JSON-LD                |
-| config.js | `images.*`                   | Íconos, OG, Apple Touch, mask, etc.         |
-| config.js | `resend.*`                   | Emails del sistema                          |
-| config.js | `marketing.tagline`          | Tagline para hero / landing                 |
-| config.js | `marketing.testimonials.*`   | Contenido de testimonios                    |
-| config.js | `socials.*`                  | Redes “oficiales” del proyecto              |
-| about.js  | `name` / `nickname` / `role` | Identidad visible en la sección About       |
-| about.js  | `headline` / `description`   | Texto descriptivo del perfil                |
-| about.js  | `contact[]`                  | Medios directos de contacto                 |
-| about.js  | `social[]`                   | Redes personales/profesionales              |
-| about.js  | `avatarUrl` / `logoUrl`      | Imágenes del autor                          |
+| Archivo                 | Clave / Placeholder                                              | Uso principal                                      |
+| ----------------------- | ---------------------------------------------------------------- | -------------------------------------------------- |
+| `data/configProject.ts` | `appName`                                                        | Nombre de la app para SEO y branding               |
+| `data/configProject.ts` | `appDescription`                                                 | Descripción corta para `<meta name="description">` |
+| `data/configProject.ts` | `domainName` / `siteUrl`                                         | Dominio público y URL base del proyecto            |
+| `data/configProject.ts` | `author`                                                         | Autor en metadatos / JSON-LD                       |
+| `data/configProject.ts` | `twitter`                                                        | Handle para metadata/social cards                  |
+| `data/configProject.ts` | `language`                                                       | Idioma base para metadata                          |
+| `data/configProject.ts` | `themeColor` / `colors.*`                                        | Color de tema y tokens base                        |
+| `data/configProject.ts` | `keywords`                                                       | Keywords para SEO                                  |
+| `data/configProject.ts` | `images.*`                                                       | Íconos, OG, Apple Touch, mask, etc.                |
+| `data/configProject.ts` | `support.email`                                                  | Email público de soporte                           |
+| `data/configProject.ts` | `resend.fromAdmin` / `resend.fromNoReply`                        | Remitentes visibles (UI/metadata)                  |
+| `data/configProject.ts` | `socials.*`                                                      | Redes “oficiales” del proyecto (JSON-LD / UI)      |
+| `data/configProject.ts` | `marketing.tagline`                                              | Tagline para hero / landing                        |
+| `data/configProject.ts` | `marketing.testimonials.*`                                       | Contenido de testimonios                           |
+| `configApi.js`          | `nextAuth.url` / `nextAuth.secret`                               | Config server de NextAuth (URL/secret)             |
+| `configApi.js`          | `googleOAuth.clientId` / `googleOAuth.clientSecret`              | OAuth Google (server)                              |
+| `configApi.js`          | `mongodb.uri`                                                    | Conexión MongoDB (server)                          |
+| `configApi.js`          | `stripe.publicKey` / `stripe.secretKey` / `stripe.webhookSecret` | Stripe keys + webhooks (server)                    |
+| `configApi.js`          | `resend.apiKey` / `resend.fromNoReply` / `resend.fromAdmin`      | Resend API key y defaults server                   |
+| `configApi.js`          | `auth.callbackUrl`                                               | Callback URL post-login (server config)            |
+| `configApi.js`          | `aws.*`                                                          | AWS endpoints/URLs (si aplica)                     |
+| `configApi.js`          | `crisp.id`                                                       | Crisp widget id (si la API lo requiere)            |
+| `configApi.js`          | `stripePrices.*`                                                 | Price IDs (solo si tu API los necesita)            |
 
 Si quieres adaptar la plantilla a otro proyecto o a otra persona, basta con ajustar estos campos sin tocar los componentes.
 
@@ -387,7 +325,7 @@ Si quieres adaptar la plantilla a otro proyecto o a otra persona, basta con ajus
 
 Ejemplo de configuración en `tsconfig.json`:
 
-```json
+```
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -400,7 +338,7 @@ Ejemplo de configuración en `tsconfig.json`:
 
 Ejemplos de uso:
 
-```ts
+```
 import config from "@/config";
 import { getSEOTags } from "@/libs/seo";
 import "@/styles/globals.css";
@@ -408,23 +346,53 @@ import "@/styles/globals.css";
 
 ---
 
-## Scripts útiles
+## 🛠️ Scripts útiles
 
-```bash
-pnpm dev
-pnpm build
-pnpm start
-pnpm lint
+```
+scripts/
+├─ convert_pdf_to_jpg.js
+├─ convert-images-to-webp.js
+└─ normalize-names.js
+```
+
+### `convert_pdf_to_jpg.js`
+Convierte **PDF → JPG** (primera página).  
+Requiere Ghostscript + ImageMagick.
+
+```
+node scripts/convert_pdf_to_jpg.js
+```
+
+---
+
+### `convert-images-to-webp.js`
+Convierte **.png / .jpg / .jpeg → .webp**, conserva originales.
+
+```
+node scripts/convert-images-to-webp.js
+```
+
+### `normalize-names.js`
+Normaliza nombres de archivos/carpetas (acentos, minúsculas, `_`).
+
+```
+cd ruta/del/directorio
+node scripts/normalize-names.js -r
+```
+
+Modo prueba:
+```
+node scripts/normalize-names.js --dry
 ```
 
 ---
 
 ## VSCode recomendado
 
-```json
-"explorer.fileNesting.enabled": true,
-"explorer.fileNesting.patterns": {
-  "package.json": "config.js,.eslintrc.json,next.config.js,package-lock.json,postcss.config.js,tailwind.config.ts,jsconfig.json,next-sitemap.config.js,tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts",
-  "README.md": ".gitignore,.env.example,.env.local"
-}
+```
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml",
+    "README.md": ".gitignore,.env.example,.env.local,.env*,config.js,configApi.js,config.ts,configApi.ts"
+  }
 ```

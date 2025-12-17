@@ -2,10 +2,10 @@ const configProject = {
   // ======================================================
   // 🧩 PROYECTO (metadata / web)
   // ======================================================
-  appName: process.env.NEXT_PUBLIC_APP_NAME || "<Place holder>",
-  appDescription: process.env.NEXT_PUBLIC_APP_DESCRIPTION || "<Place holder>",
-  domainName: process.env.NEXT_PUBLIC_DOMAIN_NAME || "website.placeholder.com",
-  siteUrl: process.env.SITE_URL || "http://localhost:3000",
+  appName: "<Place holder>",
+  appDescription: "<Place holder>",
+  domainName: "website.placeholder.com",
+  siteUrl: "http://localhost:3000",
 
   // ======================================================
   // 🌐 METADATOS / SEO
@@ -38,15 +38,15 @@ const configProject = {
   // 💬 SOPORTE / CONTACTO (público)
   // ======================================================
   support: {
-    email: process.env.NEXT_PUBLIC_RESEND_SUPPORT_EMAIL || "correo@placeholder.com",
+    email: "correo@placeholder.com",
   },
 
   // ======================================================
   // ✉️ RESEND (client-side references)
   // ======================================================
   resend: {
-    fromAdmin: process.env.NEXT_PUBLIC_RESEND_FROM_ADMIN || "admin@placeholder.com",
-    fromNoReply: process.env.NEXT_PUBLIC_RESEND_FROM_NO_REPLY || "noreply@placeholder.com",
+    fromAdmin: "admin@placeholder.com",
+    fromNoReply: "noreply@placeholder.com",
   },
 
   // ======================================================
