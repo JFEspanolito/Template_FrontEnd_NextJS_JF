@@ -446,6 +446,14 @@ Modo prueba:
 node scripts/normalize-names.js --dry
 ```
 
+### `convert-audio-to-webm.js`
+Convierte .mp3 / .wav / .m4a / .aac / .ogg → .webm (Opus).
+Requiere FFmpeg instalado y disponible en PATH. Conserva originales.
+
+```
+node scripts/convert-audio-to-webm.js
+```
+
 ---
 
 ## VSCode recomendado
