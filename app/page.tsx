@@ -19,8 +19,6 @@ export default function Home() {
       }}
     >
       Welcome to {configProject.appName}
-
     </div>
-
   );
 }
