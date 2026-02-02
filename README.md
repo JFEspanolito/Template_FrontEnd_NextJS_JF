@@ -404,6 +404,9 @@ import "@/styles/globals.css";
 ---
 
 ## 🛠️ Scripts útiles
+```
+tree -I "node_modules|.git|.vscode|.next" > tree.txt
+```
 
 ```
 scripts/
