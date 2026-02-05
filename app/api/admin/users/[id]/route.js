@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/next-auth";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 import User from "@/models/User";
 
 // Prevent caching

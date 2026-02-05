@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 import Lead from "@/models/Lead";
 
 export async function POST(req) {

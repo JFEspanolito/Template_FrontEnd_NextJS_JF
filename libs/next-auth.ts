@@ -6,7 +6,7 @@ import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { NextAuthOptions } from "next-auth";
 import configApi from "@/configApi.js";
-import connectMongo from "./mongo";
+import mongoClientPromise from "./db";
 import User from "@/models/User";
 import configProject from "@/data/configProject";
 
@@ -94,7 +94,9 @@ export const authOptions: NextAuthOptions = {
   // New users will be saved in Database (MongoDB Atlas). Each user (model) has some fields like name, email, image, etc..
   // Requires a MongoDB database. Set MONOGODB_URI env variable.
   // Learn more about the model type: https://next-auth.js.org/v3/adapters/models
-  ...(MONGODB_URI && connectMongo ? { adapter: MongoDBAdapter(connectMongo) } : {}),
+  ...(MONGODB_URI && mongoClientPromise
+    ? { adapter: MongoDBAdapter(mongoClientPromise as any) }
+    : {}),
 
   callbacks: {
     async jwt({ token, user, trigger, session }) {

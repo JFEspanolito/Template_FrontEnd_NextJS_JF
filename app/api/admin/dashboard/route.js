@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/next-auth";
 import User from "@/models/User";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 
 // Force dynamic to avoid caching
 export const dynamic = "force-dynamic";

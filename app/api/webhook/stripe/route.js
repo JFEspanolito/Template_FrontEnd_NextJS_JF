@@ -1,16 +1,32 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 import configApi from "@/configApi";
 import User from "@/models/User";
 import { findCheckoutSession } from "@/libs/stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const getStripe = () => {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey) {
+    throw new Error("STRIPE_SECRET_KEY is not set");
+  }
+
+  return new Stripe(apiKey);
+};
 
 export async function POST(req) {
   await connectMongo();
+
+  let stripe;
+  try {
+    stripe = getStripe();
+  } catch (err) {
+    console.error(err.message);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 
   const body = await req.text();
 
