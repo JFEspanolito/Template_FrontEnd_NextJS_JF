@@ -4,18 +4,17 @@ node_modules/
 .vercel/
 build/
 dist/
+.astro/            # Astro build cache
+.vite/             # Vite cache
 
 # --- Environment & Security (CRITICAL) ---
 .env
-.env.local
-.env.production
-.env.development
+.env.*
 # Mantén .env.example para que la IA sepa qué variables existen
 !.env.example
 
 # --- Lockfiles (Noise reduction) ---
-# La IA solo necesita package.json para ver versiones. 
-# Los lockfiles consumen miles de tokens inútilmente.
+# La IA solo necesita package.json para ver versiones.
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
@@ -27,7 +26,7 @@ yarn.lock
 .DS_Store
 
 # --- Binary & Asset Files ---
-# La IA no puede "leer" imágenes o videos, solo ocupan espacio.
+# La IA no puede "leer" binarios, solo consumen contexto
 *.jpg
 *.jpeg
 *.png
@@ -40,12 +39,24 @@ yarn.lock
 *.mp3
 *.wav
 *.pdf
+*.zip
+*.rar
+*.7z
+
+# --- Fonts ---
+*.woff
+*.woff2
+*.ttf
+*.otf
+
+# --- Tailwind / Generated CSS ---
+# Mantén SOLO el CSS fuente, no el compilado
+public/*.css
+dist/*.css
 
 # --- Specific Project Noise ---
-# Ignora los assets estáticos pesados, pero mantén el código
 public/onekoAssets/
 public/icons/
-# Si generaste un árbol de archivos gigante, ignóralo para no duplicar contexto
 tree.txt
 
 # --- Logs ---
@@ -53,3 +64,11 @@ tree.txt
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
+
+# --- Test & Coverage ---
+coverage/
+.playwright/
+.cypress/
+
+# --- OS junk ---
+Thumbs.db
