@@ -30,7 +30,7 @@ export async function GET() {
 
     return NextResponse.json({ data: stats });
   } catch (error) {
-    console.error("Error fetching dashboard data:", error);
+    console.error("Error fetching dashboard data:", error?.message || String(error));
     return NextResponse.json(
       { error: "Error fetching dashboard data" },
       { status: 500 }

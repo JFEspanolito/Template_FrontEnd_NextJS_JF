@@ -14,10 +14,7 @@ export const sendOpenAi = async (
 ): Promise<string | null> => {
   const url = "https://api.openai.com/v1/chat/completions";
 
-  console.log("Ask GPT >>>");
-  messages.map((m) =>
-    console.log(" - " + m.role.toUpperCase() + ": " + m.content)
-  );
+  
 
   const body = JSON.stringify({
     model: "gpt-4",
@@ -40,21 +37,9 @@ export const sendOpenAi = async (
     const answer = res.data.choices[0].message.content;
     const usage = res?.data?.usage;
 
-    console.log(">>> " + answer);
-    console.log(
-      "TOKENS USED: " +
-        usage?.total_tokens +
-        " (prompt: " +
-        usage?.prompt_tokens +
-        " / response: " +
-        usage?.completion_tokens +
-        ")"
-    );
-    console.log("\n");
-
     return answer;
   } catch (e: any) {
-    console.error("GPT Error: " + e?.response?.status, e?.response?.data);
+    console.error("GPT Error:", e?.response?.status, e?.message || String(e));
     return null;
   }
 };

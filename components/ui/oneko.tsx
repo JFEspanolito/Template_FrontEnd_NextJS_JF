@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import "@/scripts/oneko.js";
 import Image from "next/image";
 
 const STORAGE_KEY = "oneko:bedPosition";
@@ -12,6 +11,9 @@ export default function Oneko() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    import("@/scripts/oneko.js").catch(() => {
+      // ignore load failures (e.g., SSR or missing asset)
+    });
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {

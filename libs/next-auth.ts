@@ -39,7 +39,7 @@ if (GOOGLE_ID && GOOGLE_SECRET) {
           createdAt: new Date(),
         };
       },
-    })
+    }),
   );
 }
 
@@ -48,7 +48,7 @@ if (GITHUB_ID && GITHUB_SECRET) {
     GitHubProvider({
       clientId: GITHUB_ID,
       clientSecret: GITHUB_SECRET,
-    })
+    }),
   );
 }
 
@@ -57,7 +57,7 @@ if (LINKEDIN_ID && LINKEDIN_SECRET) {
     LinkedInProvider({
       clientId: LINKEDIN_ID,
       clientSecret: LINKEDIN_SECRET,
-    })
+    }),
   );
 }
 
@@ -66,7 +66,7 @@ if (FACEBOOK_ID && FACEBOOK_SECRET) {
     FacebookProvider({
       clientId: FACEBOOK_ID,
       clientSecret: FACEBOOK_SECRET,
-    })
+    }),
   );
 }
 
@@ -83,7 +83,7 @@ if (MONGODB_URI && RESEND_API_KEY) {
         },
       },
       from: configApi.resend.fromNoReply,
-    })
+    }),
   );
 }
 
@@ -94,9 +94,7 @@ export const authOptions: NextAuthOptions = {
   // New users will be saved in Database (MongoDB Atlas). Each user (model) has some fields like name, email, image, etc..
   // Requires a MongoDB database. Set MONOGODB_URI env variable.
   // Learn more about the model type: https://next-auth.js.org/v3/adapters/models
-  ...(MONGODB_URI && mongoClientPromise
-    ? { adapter: MongoDBAdapter(mongoClientPromise as any) }
-    : {}),
+  ...(MONGODB_URI && mongoClientPromise ? { adapter: MongoDBAdapter(mongoClientPromise as any) } : {}),
 
   callbacks: {
     async jwt({ token, user, trigger, session }) {
@@ -116,7 +114,7 @@ export const authOptions: NextAuthOptions = {
             }
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
+          console.error("Error fetching user role:", (error as any)?.message || String(error));
         }
       }
 
@@ -136,7 +134,7 @@ export const authOptions: NextAuthOptions = {
             (session.user as any).role = (token as any)?.role ?? "user";
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
+          console.error("Error fetching user role:", (error as any)?.message || String(error));
           (session.user as any).role = (token as any)?.role ?? "user";
         }
       }
@@ -150,9 +148,10 @@ export const authOptions: NextAuthOptions = {
     brandColor: configProject.colors.main,
     // Add you own logo below. Recommended size is rectangle (i.e. 200x50px) and show your logo + name.
     // It will be used in the login flow to display your logo. If you don't add it, it will look faded.
-    logo: process.env.NODE_ENV === "development" 
-      ? "http://localhost:3000/logoAndName.webp" 
-      : `https://${configProject.domainName}/logoAndName.webp`,
+    logo:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000/logoAndName.webp"
+        : `https://${configProject.domainName}/logoAndName.webp`,
   },
 };
 
@@ -167,5 +166,5 @@ try {
   console.info("[next-auth] NEXTAUTH_SECRET set:", !!NEXTAUTH_SECRET);
   console.info("[next-auth] MONGODB_URI set:", !!process.env.MONGODB_URI);
 } catch (e) {
-  console.error("[next-auth] Diagnostic logging failed:", e);
+  console.error("[next-auth] Diagnostic logging failed:", (e as any)?.message || String(e));
 }

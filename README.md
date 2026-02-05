@@ -10,20 +10,20 @@ Boilerplate minimal para **Next.js 16.x (App Router)** y **React 19.x**, actuali
 - Theme switch (modo claro / oscuro)
 - Componentes reutilizables y estructura modular
 
-| ⚙️ Stack | 📦 Dependencias clave reflejadas |
-|---------|--------------------------------|
-| **Framework:** Next.js 16.x (App Router) | `next@16.x` |
-| **UI Runtime:** React 19.x | `react@19.x` |
-| **Lenguaje:** TypeScript | `typescript` |
-| **Estilos:** Tailwind CSS + DaisyUI | `tailwindcss@4.x`, `daisyui@5.x` |
-| **Auth:** NextAuth.js v4 | `next-auth@4.x` |
-| **DB:** MongoDB + Mongoose | `mongodb@7.x`, `mongoose@9.x` |
-| **Email:** Resend (opcional) | `resend` |
-| **Payments:** Stripe (opcional) | `stripe` |
-| **UX / UI Utils:** Framer Motion, Lucide, Hot Toast | `framer-motion`, `lucide-react`, `react-hot-toast` |
-| **Infra / SEO:** next-sitemap | `next-sitemap` |
-| **Theming:** next-themes | `next-themes` |
-| **Extras:** Top loader, tooltips, syntax highlighting | `nextjs-toploader`, `crisp-sdk-web` |
+| ⚙️ Stack                                              | 📦 Dependencias clave reflejadas                   |
+| ----------------------------------------------------- | -------------------------------------------------- |
+| **Framework:** Next.js 16.x (App Router)              | `next@16.x`                                        |
+| **UI Runtime:** React 19.x                            | `react@19.x`                                       |
+| **Lenguaje:** TypeScript                              | `typescript`                                       |
+| **Estilos:** Tailwind CSS + DaisyUI                   | `tailwindcss@4.x`, `daisyui@5.x`                   |
+| **Auth:** NextAuth.js v4                              | `next-auth@4.x`                                    |
+| **DB:** MongoDB + Mongoose                            | `mongodb@7.x`, `mongoose@9.x`                      |
+| **Email:** Resend (opcional)                          | `resend`                                           |
+| **Payments:** Stripe (opcional)                       | `stripe`                                           |
+| **UX / UI Utils:** Framer Motion, Lucide, Hot Toast   | `framer-motion`, `lucide-react`, `react-hot-toast` |
+| **Infra / SEO:** next-sitemap                         | `next-sitemap`                                     |
+| **Theming:** next-themes                              | `next-themes`                                      |
+| **Extras:** Top loader, tooltips, syntax highlighting | `nextjs-toploader`, `crisp-sdk-web`                |
 
 ---
 
@@ -91,49 +91,50 @@ app/
  └─ page.tsx               # Home
 
 components/
- ├─ auth/                  # Componentes de autenticación
- ├─ buttons/               # Botones reutilizables
- ├─ icons/                 # Iconografía SVG
- ├─ pagination/            # Paginación
- └─ ui/                    # UI base (adaptados de ScrollX UI)
+├─ auth/ # Componentes de autenticación
+├─ buttons/ # Botones reutilizables
+├─ icons/ # Iconografía SVG
+├─ pagination/ # Paginación
+└─ ui/ # UI base (adaptados de ScrollX UI)
 
-sections/                  # Secciones de páginas (Hero, About, CTA, etc.)
+sections/ # Secciones de páginas (Hero, About, CTA, etc.)
 
 contexts/
- ├─ LanguageContext.tsx    # i18n por contexto
- └─ ThemeContext.tsx       # Tema claro / oscuro
+├─ LanguageContext.tsx # i18n por contexto
+└─ ThemeContext.tsx # Tema claro / oscuro
 
 data/
- └─ about.js               # Contenido del perfil ES / EN
+└─ about.js # Contenido del perfil ES / EN
 
 libs/
- ├─ api.ts
- ├─ gpt.ts                 # Opcional
- ├─ mongo.ts
- ├─ mongoose.ts
- ├─ next-auth.ts
- ├─ resend.ts
- ├─ seo.tsx
- └─ stripe.ts
+├─ api.ts
+├─ gpt.ts # Opcional
+├─ mongo.ts
+├─ mongoose.ts
+├─ next-auth.ts
+├─ resend.ts
+├─ seo.tsx
+└─ stripe.ts
 
 models/
- ├─ User.ts
- └─ plugins/               # Plugins / helpers de Mongoose
+├─ User.ts
+└─ plugins/ # Plugins / helpers de Mongoose
 
-layout/                    # Layouts compuestos (dashboard, admin, etc.)
+layout/ # Layouts compuestos (dashboard, admin, etc.)
 
 public/
- └─ icons/                 # Íconos públicos
+└─ icons/ # Íconos públicos
 
 scripts/
- ├─ convert_pdf_to_jpg.js
- ├─ convert-images-to-webp.js
- └─ normalize-names.js
+├─ convert_pdf_to_jpg.js
+├─ convert-images-to-webp.js
+└─ normalize-names.js
 
 styles/
- └─ globals.css
+└─ globals.css
 
-config.js                  # Configuración global del proyecto
+config.js # Configuración global del proyecto
+
 ```
 
 </details>
@@ -235,15 +236,19 @@ Los componentes del directorio `components/ui` están inspirados y adaptados a p
 Clonar e instalar:
 
 ```
+
 git clone https://github.com/JFEspanolito/Template_FrontEnd_NextJS_JF.git
 cd MyNextJFTemplate
 pnpm install
+
 ```
 
 Variables de entorno:
 
 ```
+
 cp .env.example .env.local
+
 ```
 
 Editar `.env.local`:
@@ -251,14 +256,18 @@ Editar `.env.local`:
 Desarrollo:
 
 ```
+
 pnpm dev
+
 ```
 
 Producción:
 
 ```
+
 pnpm build
 pnpm start
+
 ```
 
 ---
@@ -274,7 +283,7 @@ La configuración del template se divide por responsabilidad en **dos archivos p
 
 ### `configApi.js` — Configuración de backend / server
 
-Archivo destinado exclusivamente a **integraciones y lógica de servidor**.  
+Archivo destinado exclusivamente a **integraciones y lógica de servidor**.
 Aquí viven las configuraciones que normalmente dependen de secretos, tokens o credenciales.
 
 Incluye, entre otros:
@@ -295,7 +304,7 @@ Regla:
 
 ### `configProject.ts` — Configuración del proyecto / frontend
 
-Archivo que define **la identidad y comportamiento visual del proyecto**.  
+Archivo que define **la identidad y comportamiento visual del proyecto**.
 No consume variables de entorno: todos los valores son **placeholders editables directamente**.
 
 Se utiliza para centralizar:
@@ -383,45 +392,57 @@ Si quieres adaptar la plantilla a otro proyecto o a otra persona, basta con ajus
 Ejemplo de configuración en `tsconfig.json`:
 
 ```
+
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    }
-  }
+"compilerOptions": {
+"baseUrl": ".",
+"paths": {
+"@/_": ["./_"]
 }
+}
+}
+
 ```
 
 Ejemplos de uso:
 
 ```
+
 import config from "@/config";
 import { getSEOTags } from "@/libs/seo";
 import "@/styles/globals.css";
+
 ```
 
 ---
 
 ## 🛠️ Scripts útiles
 ```
-tree -I "node_modules|.git|.vscode|.next" > tree.txt
+winget install GerdHoffmann.Tree
+
+& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next' > tree.txt
+
 ```
 
 ```
+
 scripts/
-├─ convert_pdf_to_jpg.js
-├─ convert-images-to-webp.js
-└─ normalize-names.js
+    |-- convert-audio-to-webm.js
+    |-- convert-images-to-webp.js
+    |-- convert_pdf_to_jpg.js
+    |-- normalize-names.js
+
 ```
 
 ### `convert_pdf_to_jpg.js`
 
-Convierte **PDF → JPG** (primera página).  
+Convierte **PDF → JPG** (primera página).
 Requiere Ghostscript + ImageMagick.
 
 ```
+
 node scripts/convert_pdf_to_jpg.js
+
 ```
 
 ---
@@ -431,7 +452,9 @@ node scripts/convert_pdf_to_jpg.js
 Convierte **.png / .jpg / .jpeg → .webp**, conserva originales.
 
 ```
+
 node scripts/convert-images-to-webp.js
+
 ```
 
 ### `normalize-names.js`
@@ -439,14 +462,18 @@ node scripts/convert-images-to-webp.js
 Normaliza nombres de archivos/carpetas (acentos, minúsculas, `_`).
 
 ```
+
 cd ruta/del/directorio
 node scripts/normalize-names.js -r
+
 ```
 
 Modo prueba:
 
 ```
+
 node scripts/normalize-names.js --dry
+
 ```
 
 ### `convert-audio-to-webm.js`
@@ -454,7 +481,9 @@ Convierte .mp3 / .wav / .m4a / .aac / .ogg → .webm (Opus).
 Requiere FFmpeg instalado y disponible en PATH. Conserva originales.
 
 ```
+
 node scripts/convert-audio-to-webm.js
+
 ```
 
 ---
@@ -462,28 +491,40 @@ node scripts/convert-audio-to-webm.js
 ## VSCode recomendado
 
 ```
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml",
-    "README.md": ".gitignore,.env.example,.env.local,.env*,config.js,configApi.js,config.ts,configApi.ts"
-  },
+
+"explorer.fileNesting.enabled": true,
+"explorer.fileNesting.patterns": {
+"package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml,astro.config.mjs",
+"README.md": "llms.txt, AI_ARCHITECTURE.md, .cursorrules, .llmignore,tree.txt,.gitignore,.env.example,.env.local,.env\*,config.js,configApi.js,config.ts,configApi.ts,llms.txt",
+},
+"files.exclude": {
+".astro": true,
+".next": true,
+".vscode": true,
+"node_modules": true,
+"**/.agent": true,
+"**/.claude": true,
+"**/.codex": true,
+"**/.cursor": true,
+"**/.gemini": true,
+"**/.opencode": true,
+},
+
 ```
 
 ```
-  "workbench.colorCustomizations": {
-    //Selector Color
-    "editor.selectionBackground": "#ffd54f80",
-    "editor.selectionForeground": "#000000",
-    "editor.inactiveSelectionBackground": "#ffecb340",
+
+"workbench.colorCustomizations": {
+//Selector Color
+"editor.selectionBackground": "#ffd54f80",
+"editor.selectionForeground": "#000000",
+"editor.inactiveSelectionBackground": "#ffecb340",
 
     "editor.selectionHighlightBackground": "#00000000",
     "editor.wordHighlightBackground": "#00000000",
     "editor.wordHighlightStrongBackground": "#00000000",
 
     // Apagar barras amarillas de resultados de búsqueda
-    "editor.findMatchBackground": "#00000000",
-    "editor.findMatchHighlightBackground": "#00000000",
-    "editor.findRangeHighlightBackground": "#00000000",
     "editor.rangeHighlightBackground": "#00000000",
 
     // Colores personalizados para búsqueda (amarillo transparente)
@@ -492,5 +533,9 @@ node scripts/convert-audio-to-webm.js
     "editor.findRangeHighlightBackground": "#ffeb3b33",
     "editor.findMatchBorder": "#ffeb3b",
     "editor.findMatchHighlightBorder": "#ffeb3b"
-  },
+
+},
+
+```
+
 ```

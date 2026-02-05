@@ -42,7 +42,7 @@ export async function POST(req) {
         url: stripePortalUrl,
       });
     } catch (e) {
-      console.error(e);
+      console.error(e?.message || String(e));
       return NextResponse.json({ error: e?.message }, { status: 500 });
     }
   } else {

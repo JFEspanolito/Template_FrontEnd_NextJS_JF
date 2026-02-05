@@ -61,7 +61,7 @@ export function SignInForm({ open = true, onClose }: Props) {
       });
 
       if (result?.error || !result?.ok) {
-        console.error(`[DEV] OAuth Error (${providerId}):`, result?.error || "Authentication failed");
+        console.error(`[DEV] OAuth Error (${providerId}):`, String(result?.error || "Authentication failed"));
         toast.error(t("errorSigningIn"), {
           duration: 3000,
           position: "bottom-center",
@@ -73,7 +73,7 @@ export function SignInForm({ open = true, onClose }: Props) {
         window.location.href = result.url;
       }
     } catch (error) {
-      console.error(`[DEV] Sign-in exception (${providerId}):`, error);
+      console.error(`[DEV] Sign-in exception (${providerId}):`, (error as any)?.message || String(error));
       toast.error(t("errorSigningIn"), {
         duration: 3000,
         position: "bottom-center",
