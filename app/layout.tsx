@@ -1,6 +1,7 @@
 import config from "@/data/configProject";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/layout/Footer";
 import { Header } from "@/layout/Header";
@@ -81,7 +82,9 @@ export default function RootLayout({
             <Oneko />
             
             {/* Header en la parte superior */}
-            <Header />
+            <Suspense fallback={null}>
+              <Header />
+            </Suspense>
 
             {/* Contenido de la página */}
             {children}

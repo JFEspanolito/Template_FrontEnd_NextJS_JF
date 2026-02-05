@@ -81,7 +81,7 @@ export const createCustomerPortal = async ({ customerId, returnUrl }: { customer
 
     return portalSession.url;
   } catch (e) {
-    console.error(e);
+    console.error((e as any)?.message || String(e));
     return null;
   }
 };
@@ -97,7 +97,7 @@ export const findCheckoutSession = async (sessionId: string): Promise<Stripe.Che
 
     return session;
   } catch (e) {
-    console.error(e);
+    console.error((e as any)?.message || String(e));
     return null;
   }
 };

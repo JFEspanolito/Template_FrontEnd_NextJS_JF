@@ -49,7 +49,7 @@ async function renameInDir(dir, { recursive, dry }) {
       const newPath = path.join(dir, newName);
 
       if (dry) {
-        console.log(`[DRY] ${oldPath}  ->  ${newPath}`);
+        
       } else {
         // evita colisiones simples
         try {
@@ -57,7 +57,6 @@ async function renameInDir(dir, { recursive, dry }) {
           console.warn(`SKIP (ya existe): ${newPath}`);
         } catch {
           await fs.rename(oldPath, newPath);
-          console.log(`OK: ${oldPath}  ->  ${newPath}`);
         }
       }
     }

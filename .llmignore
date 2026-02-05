@@ -1,0 +1,55 @@
+# --- Dependencies & Build Artifacts ---
+node_modules/
+.next/
+.vercel/
+build/
+dist/
+
+# --- Environment & Security (CRITICAL) ---
+.env
+.env.local
+.env.production
+.env.development
+# Mantén .env.example para que la IA sepa qué variables existen
+!.env.example
+
+# --- Lockfiles (Noise reduction) ---
+# La IA solo necesita package.json para ver versiones. 
+# Los lockfiles consumen miles de tokens inútilmente.
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# --- Git & IDE ---
+.git/
+.vscode/
+.idea/
+.DS_Store
+
+# --- Binary & Asset Files ---
+# La IA no puede "leer" imágenes o videos, solo ocupan espacio.
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
+*.webp
+*.avif
+*.mp4
+*.webm
+*.mp3
+*.wav
+*.pdf
+
+# --- Specific Project Noise ---
+# Ignora los assets estáticos pesados, pero mantén el código
+public/onekoAssets/
+public/icons/
+# Si generaste un árbol de archivos gigante, ignóralo para no duplicar contexto
+tree.txt
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

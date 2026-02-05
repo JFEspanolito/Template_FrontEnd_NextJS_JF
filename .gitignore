@@ -51,7 +51,3 @@ public/sitemap-0.xml
 
 # IDE and AI tools
 .vscode/
-.claude/
-AGENTS.md
-CLAUDE.md
-GEMINI.md

@@ -59,10 +59,8 @@ function checkDependencies() {
 
 function convertPdfToJpg(pdfPath, outputPath) {
   try {
-    console.log(`Convirtiendo: ${path.basename(pdfPath)}...`);
     const command = `magick -density 150 "${pdfPath}[0]" -quality 85 -flatten "${outputPath}"`;
     execSync(command, { stdio: 'pipe' });
-    console.log(`✓ ${path.basename(outputPath)}`);
     return true;
   } catch (error) {
     console.error(`✗ ${path.basename(pdfPath)}: ${error.message}`);
@@ -75,7 +73,7 @@ function findPdfFiles(directory) {
   return files.filter(file => path.extname(file).toLowerCase() === '.pdf');
 }
 
-console.log('🔄 Conversor PDF → JPG\n');
+ 
 
 if (!checkDependencies()) {
   process.exit(1);
@@ -84,11 +82,8 @@ if (!checkDependencies()) {
 const pdfFiles = findPdfFiles(pdfDir);
 
 if (pdfFiles.length === 0) {
-  console.log('⚠️  No se encontraron PDFs en:', pdfDir);
   process.exit(0);
 }
-
-console.log(`📄 ${pdfFiles.length} PDFs encontrados\n`);
 
 let successCount = 0;
 let errorCount = 0;
@@ -105,6 +100,4 @@ pdfFiles.forEach(pdfFile => {
   }
 });
 
-console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-console.log(`✅ Completado: ${successCount} exitosas, ${errorCount} errores`);
-console.log(`📁 ${outputDir}`);
+ 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/next-auth";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 import { createCustomerPortal } from "@/libs/stripe";
 import User from "@/models/User";
 
@@ -42,7 +42,7 @@ export async function POST(req) {
         url: stripePortalUrl,
       });
     } catch (e) {
-      console.error(e);
+      console.error(e?.message || String(e));
       return NextResponse.json({ error: e?.message }, { status: 500 });
     }
   } else {

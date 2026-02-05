@@ -17,7 +17,7 @@ const PATTERN = "**/*.{mp3,wav,m4a,aac,ogg}";
       ignore: ["**/node_modules/**", "dist/**", ".next/**"],
     });
 
-    console.log(`Found ${files.length} audio files.`);
+    
 
     for (const file of files) {
       const out = file.replace(/\.(mp3|wav|m4a|aac|ogg)$/i, ".webm");
@@ -31,16 +31,14 @@ const PATTERN = "**/*.{mp3,wav,m4a,aac,ogg}";
         const cmd = `ffmpeg -y -i "${file}" -c:a libopus -b:a 96k "${out}"`;
 
         execSync(cmd, { stdio: "ignore" });
-
-        console.log(`Converted: ${file} -> ${out}`);
       } catch (err) {
-        console.error(`Failed convert ${file}:`, err.message || err);
+        console.error(`Failed convert ${file}:`, err?.message || String(err));
       }
     }
 
-    console.log("Audio conversion complete. Originals left in-place.");
+    
   } catch (err) {
-    console.error("Error during conversion:", err);
+    console.error("Error during conversion:", err?.message || String(err));
     process.exit(1);
   }
 })();

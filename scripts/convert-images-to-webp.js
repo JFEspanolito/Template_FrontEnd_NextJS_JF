@@ -13,7 +13,7 @@ const PATTERN = '**/*.{png,jpg,jpeg}';
 (async () => {
   try {
     const files = glob.sync(PATTERN, { nodir: true, ignore: ['**/node_modules/**', 'dist/**', '.next/**'] });
-    console.log(`Found ${files.length} image files (png, jpg, jpeg).`);
+    
 
     for (const file of files) {
       // 2. Regex actualizada para reemplazar cualquier extensión de origen
@@ -34,16 +34,14 @@ const PATTERN = '**/*.{png,jpg,jpeg}';
         }
 
         await conversion.toFile(out);
-        
-        console.log(`Converted: ${file} -> ${out}`);
-      } catch (err) {
-        console.error(`Failed convert ${file}:`, err.message || err);
+        } catch (err) {
+        console.error(`Failed convert ${file}:`, err?.message || String(err));
       }
     }
 
-    console.log('Conversion complete. Originals left in-place.');
-  } catch (err) {
-    console.error('Error during conversion:', err);
+    
+    } catch (err) {
+    console.error('Error during conversion:', err?.message || String(err));
     process.exit(1);
   }
 })();

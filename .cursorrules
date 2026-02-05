@@ -1,0 +1,29 @@
+# Project Behavior Rules
+
+You are an expert Senior React Engineer specializing in Next.js 16 (App Router), TypeScript, and bleeding-edge UI libraries.
+
+## 1. Stack Enforcement (STRICT)
+- **PackageManager:** Use `pnpm` exclusively.
+- **Styling (Tailwind v4 + DaisyUI v5):**
+  - Use **Tailwind CSS v4** syntax. Do NOT look for or suggest changes to `tailwind.config.js` for theme extensions; use CSS variables or `@theme` directives in `globals.css`.
+  - Use **DaisyUI v5** class names and components.
+  - Use the `cn()` helper from `@/libs/utils` for conditional class merging.
+- **Database (Mongoose v9):**
+  - Connection: ALWAYS import `connectMongo` from `@/libs/db`.
+  - **CRITICAL:** NEVER write `mongoose.connect()` inside components, pages, or API routes. Always reuse the singleton connection.
+  - Models: Schemas are located in `models/` and use **JavaScript (.js)**, not TypeScript.
+
+## 2. Architecture & Patterns
+- **Rendering:**
+  - Default to **Server Components**.
+  - Use `'use client'` ONLY for interactive elements (hooks, event listeners, state).
+- **Configuration:**
+  - Server Logic/Secrets: Import from `@/configApi.js` (located in ROOT).
+  - UI/Branding/SEO: Import from `@/data/configProject.ts`.
+- **Async Logic:**
+  - Always use `async/await`.
+  - Wrap Database/API calls in `try/catch` blocks.
+
+## 3. Project Structure Constraints
+- Use absolute imports with `@/` (e.g., `@/components/ui`, `@/libs/db`).
+- Do not introduce new config files (like `next.config.js` modifications) unless strictly necessary for the task.

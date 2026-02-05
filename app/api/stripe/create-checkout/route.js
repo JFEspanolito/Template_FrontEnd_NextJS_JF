@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/next-auth";
 import { createCheckout } from "@/libs/stripe";
-import connectMongo from "@/libs/mongoose";
+import { connectMongo } from "@/libs/db";
 import User from "@/models/User";
 
 // This function is used to create a Stripe Checkout Session (one-time payment or subscription)
@@ -55,7 +55,7 @@ export async function POST(req) {
 
     return NextResponse.json({ url: stripeSessionURL });
   } catch (e) {
-    console.error(e);
+    console.error(e?.message || String(e));
     return NextResponse.json({ error: e?.message }, { status: 500 });
   }
 }

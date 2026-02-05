@@ -10,7 +10,7 @@ type Props = {
 
 export default function Error({ error, reset }: Props) {
   useEffect(() => {
-    console.error(error);
+    console.error(error?.message || String(error));
   }, [error]);
 
   return (

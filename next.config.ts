@@ -38,7 +38,7 @@ const securityHeaders = [
   // Quitar CORS reduce superficie de ataque innecesaria.
   // Solo descomentar si en el futuro agregas APIs / fetch cross-origin.
 
-  { key: "Access-Control-Allow-Origin", value: "https://jfespanolito.dev" },
+  { key: "Access-Control-Allow-Origin", value: "https://localhost.dev" },
   { key: "Access-Control-Allow-Methods", value: "GET, POST, OPTIONS" },
   { key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization" },
   */

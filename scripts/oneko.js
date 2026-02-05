@@ -1,7 +1,7 @@
 // oneko.js: https://github.com/adryd325/oneko.js
 
 (async function oneko() {
-  console.log('[oneko] script loaded');
+  
   const nekoEl = document.createElement("div");
   let nekoPosX = 32,
     nekoPosY = 32,
@@ -23,7 +23,7 @@
       const value = JSON.parse(localStorage.getItem(`oneko:${key}`));
       return typeof value === typeof fallback ? value : fallback;
     } catch (e) {
-      console.error(e);
+      console.error(e?.message || String(e));
       return fallback;
     }
   }
@@ -46,7 +46,7 @@
     ];
     variantsLoaded = true;
   }
-    spriteSets = {
+  const spriteSets = {
       idle: [[-3, -3]],
       alert: [[-7, -3]],
       scratchSelf: [
@@ -107,9 +107,10 @@
         [-1, 0],
         [-1, -1],
       ],
-    }, // Get keys with 2 or more sprites
-    keys = Object.keys(spriteSets).filter((key) => spriteSets[key].length > 1),
-    usedKeys = new Set();
+    };
+  // Get keys with 2 or more sprites
+  const keys = Object.keys(spriteSets).filter((key) => spriteSets[key].length > 1);
+  const usedKeys = new Set();
 
   function sleep() {
     forceSleep = !forceSleep;
@@ -186,7 +187,7 @@
   }
 
   function create() {
-    console.log('[oneko] create() start', { nekoPosX, nekoPosY, variant });
+    
     variant = parseLocalStorage("variant", "classic");
     kuroNeko = parseLocalStorage("kuroneko", false);
 
@@ -209,7 +210,6 @@
     nekoEl.style.zIndex = "10001";
 
     document.body.appendChild(nekoEl);
-    console.log('[oneko] appended to DOM', { id: nekoEl.id });
 
     window.addEventListener("mousemove", (e) => {
       if (forceSleep) return;
@@ -474,9 +474,7 @@
         // set mousePos to bed target so movement follows a straight path
         mousePosX = bx;
         mousePosY = by;
-        console.log('[oneko] goToBed -> bedTarget', { bedTargetX, bedTargetY });
         ignoreMouse = true;
-        console.log('[oneko] ignoreMouse = true');
         returningToBed = true;
         forceSleep = false;
         nudge = false;
@@ -490,7 +488,7 @@
   function arriveAtBed() {
     returningToBed = false;
     ignoreMouse = false;
-    console.log('[oneko] arriveAtBed -> ignoreMouse = false');
+    
     // snap to bed
     nekoPosX = bedTargetX ?? mousePosX;
     nekoPosY = bedTargetY ?? mousePosY;
@@ -498,7 +496,7 @@
     nekoEl.style.top = `${nekoPosY - 16}px`;
     forceSleep = true;
     window.onekoAtBed = true;
-    console.log('[oneko] arriveAtBed -> atBed', { nekoPosX, nekoPosY });
+    
     resetIdleAnimation();
   }
 
@@ -509,7 +507,7 @@
     try {
       const cx = evt?.detail?.x;
       const cy = evt?.detail?.y;
-      console.log('[oneko] showOneko event', { cx, cy, onekoShown: window.onekoShown, onekoAtBed: window.onekoAtBed });
+      
       // If not shown yet, create and show
       if (!window.onekoShown) {
         create();
@@ -520,7 +518,7 @@
           mousePosX = cx;
           mousePosY = cy;
           ignoreMouse = false;
-          console.log('[oneko] initialized mousePos from click', { mousePosX, mousePosY });
+          
         }
         return;
       }
@@ -531,7 +529,7 @@
         forceSleep = false;
         returningToBed = false;
         ignoreMouse = false;
-        console.log('[oneko] waking from bed -> cleared targets');
+        
         // Clear any bed target so we follow the cursor
         bedTargetX = null;
         bedTargetY = null;
@@ -549,7 +547,7 @@
 
       // If the cat is currently returning to bed, cancel return and wake immediately
       if (returningToBed) {
-        console.log('[oneko] clicked while returning -> cancel return and wake');
+        
         returningToBed = false;
         ignoreMouse = false;
         bedTargetX = null;
@@ -569,8 +567,8 @@
 
       // Otherwise, command the cat to run back to the bed and sleep there
       goToBed();
-    } catch (e) {
-      console.error("Failed to handle oneko:show:", e);
+      } catch (e) {
+        console.error("Failed to handle oneko:show:", e?.message || String(e));
     }
   }
 
@@ -822,3 +820,5 @@
     sleep();
   }
 })();
+
+export {};
