@@ -195,8 +195,6 @@ winget install GerdHoffmann.Tree
 & "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next' > tree.txt
 ```
 
-## 🛠️ Scripts útiles
-
 Scripts de mantenimiento ubicados en la carpeta `scripts/`.
 
 ### 1. `convert_pdf_to_jpg.js`
@@ -266,23 +264,24 @@ AppData\Roaming\Code\User\settings.json
 ```
 File Nesting & Exclusions:
 ```
-"explorer.fileNesting.enabled": true,
-"explorer.fileNesting.patterns": {
-    "package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml,astro.config.mjs,next-auth.d.ts",
-    "README.md": "llms.txt, AI_ARCHITECTURE.md, .cursorrules, .llmignore,tree.txt,.gitignore,.env.example,.env.local,.env*,config.js,configApi.js,config.ts,configApi.ts,llms.txt",
-},
-"files.exclude": {
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,next-auth.d.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml,astro.config.mjs,tailwind.config.mjs",
+    "README.md": "tree.txt,llms.txt, AI_ARCHITECTURE.md, .cursorrules, .llmignore,.gitignore,.env.example,.env.local,.env*,config.js,configApi.js,config.ts,configApi.ts,llms.md",
+  },
+  "files.exclude": {
     ".astro": true,
     ".next": true,
     ".vscode": true,
-    "node_modules": true,
     "**/.agent": true,
     "**/.claude": true,
     "**/.codex": true,
     "**/.cursor": true,
     "**/.gemini": true,
     "**/.opencode": true,
-},
+    "dist": true,
+    "node_modules": true
+  },
 ```
 Colores de interfaz (High Contrast Selection):
 
