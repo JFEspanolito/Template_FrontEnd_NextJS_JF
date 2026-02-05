@@ -235,7 +235,7 @@ Los componentes del directorio `components/ui` están inspirados y adaptados a p
 Clonar e instalar:
 
 ```
-git clone https://github.com/JFEspanolito/MyNextJFTemplate.git
+git clone https://github.com/JFEspanolito/Template_FrontEnd_NextJS_JF.git
 cd MyNextJFTemplate
 pnpm install
 ```
