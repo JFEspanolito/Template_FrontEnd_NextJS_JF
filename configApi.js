@@ -7,6 +7,17 @@ const requireEnv = (key) => {
 };
 
 const configApi = {
+
+  // ======================================================
+  // 🔐 FacturaGreen
+  // ======================================================
+  facturaGreen: {
+    apiKey: process.env.FACTURA_GREEN_API_KEY,
+    businessUuid: process.env.FACTURA_GREEN_BUSINESS_UUID, // El emisor
+    accountUuid: process.env.FACTURA_GREEN_ACCOUNT_UUID || "0000",
+    url: process.env.FACTURA_GREEN_URL || "https://api.facturagreen.dev/v1" // O prod
+  },
+
   // ======================================================
   // 🔐 NextAuth (server)
   // ======================================================
