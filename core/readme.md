@@ -153,6 +153,15 @@ export async function POST(request: Request) {
 
 ```
 
+1. errors.ts: El Diccionario de Fallos ⚠️
+Este archivo centraliza cómo tu aplicación comunica que algo salió mal. En lugar de usar errores genéricos, defines clases personalizadas (como DomainError o NotFoundError). Esto permite que tu API responda con el código HTTP exacto (400, 404, 502, etc.) según el tipo de error capturado.
+
+2. types.ts: El Lenguaje Común 🏗️
+Define las estructuras de datos que se repiten en todo el sistema. Incluye utilidades para manejar valores nulos (Nullable) o contratos estándar para los casos de uso (como la interfaz UseCase). Esto asegura que todos tus archivos hablen el mismo idioma técnico.
+
+3. container.ts: El Pegamento (Inyección de Dependencias) 💉
+Es el lugar donde se instancian y "ensamblan" las piezas de tu sistema. Su trabajo es crear el repositorio (infraestructura) e inyectarlo en el caso de uso (aplicación). Gracias a esto, tu API solo tiene que importar el caso de uso listo para funcionar, sin saber qué base de datos hay detrás.
+
 ---
 
 ## 🛡️ Seguridad
