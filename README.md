@@ -1,4 +1,3 @@
-
 # Template_FrontEnd_NextJS_JF
 
 Boilerplate minimal para **Next.js 16.x (App Router)** y **React 19.x**, actualizado a versiones recientes para mitigar vulnerabilidades conocidas.
@@ -18,7 +17,7 @@ Ahora incluye una arquitectura de **Núcleo (Core)** basada en **DDD (Domain-Dri
 | **Framework:** Next.js 16.x (App Router)              | `next@16.x`                                        |
 | **UI Runtime:** React 19.x                            | `react@19.x`                                       |
 | **Lenguaje:** TypeScript                              | `typescript`                                       |
-| **Arquitectura:** DDD (Core)                          | *Custom Implementation* |
+| **Arquitectura:** DDD (Core)                          | _Custom Implementation_                            |
 | **Estilos:** Tailwind CSS + DaisyUI                   | `tailwindcss@4.x`, `daisyui@5.x`                   |
 | **Auth:** NextAuth.js v4                              | `next-auth@4.x`                                    |
 | **DB:** MongoDB + Mongoose                            | `mongodb@7.x`, `mongoose@9.x`                      |
@@ -53,7 +52,9 @@ Optimizado para evolución rápida sin deuda estructural gracias a la separació
 ---
 
 ## 📁 Estructura básica
+
 ### Tree Map
+
 ```
 app/
  ├─ (pages)/               # Rutas públicas agrupadas
@@ -112,6 +113,7 @@ configApi.js               # Configuración del servidor (Secretos, Keys)
 ```
 
 ## 🧠 Arquitectura CORE (DDD)
+
 Este proyecto implementa Domain-Driven Design (DDD) en la carpeta core/ para desacoplar la lógica de negocio de Next.js.
 
 ¿Cómo funciona?
@@ -124,28 +126,32 @@ Application (Orquestación): Contiene los casos de uso (GenerateInvoice). Recibe
 Container (Inyección): El archivo core/container.ts conecta todo. Instancia la infraestructura y la inyecta en la aplicación.
 
 ### Flujo de Datos
+
 ```
 graph LR
     A[API Route (app/api)] -->|Llama| B{Container}
     B -->|Obtiene| C[Caso de Uso]
     C -->|Usa| D[Repositorio Mongo] & E[Adaptador FacturaGreen]
 ```
+
 Para añadir un nuevo módulo: Revisa core/leeme.md para ver la guía detallada de implementación.
 
 ### Atribución de Componentes UI
+
 Los componentes del directorio components/ui están inspirados y adaptados a partir de:
 
 - ScrollX UI - [Documentación](https://www.scrollxui.dev/docs/components) (Top Secret, Text Spotlight, Magic Dock, Card Flip, Avatar).
 - Oneko - [Original by adryd325](https://github.com/adryd325/oneko.js) (Modificado para Drag & Drop y cambio de estilos).
 
 ✅ Requisitos
+
 - Node.js 18+ (recomendado 20 LTS)
 - pnpm 9+ (gestor de paquetes)
 - MongoDB 6+ (solo si usas autenticación o persistencia)
 
 ### 🚀 Uso rápido
-Clonar e instalar:
 
+Clonar e instalar:
 
 ```
 git clone [https://github.com/JFEspanolito/Template_FrontEnd_NextJS_JF.git](https://github.com/JFEspanolito/Template_FrontEnd_NextJS_JF.git)
@@ -154,26 +160,32 @@ pnpm install
 ```
 
 Variables de entorno:
+
 ```
 cp .env.example .env.local
 Editar .env.local con tus credenciales.
 ```
 
 Desarrollo:
+
 ```
 pnpm dev
 ```
+
 Producción:
+
 ```
 pnpm build
 pnpm start
 ```
 
 ### 🧩 Configuración del proyecto
+
 La configuración se divide por responsabilidad en dos archivos principales:
 
 1. configApi.js (Server-Side)
-	Archivo destinado exclusivamente a integraciones y lógica de servidor. Aquí viven los secretos.
+   Archivo destinado exclusivamente a integraciones y lógica de servidor. Aquí viven los secretos.
+
 - NextAuth Secret & URL
 - MongoDB URI
 - Stripe Keys & Webhooks
@@ -182,14 +194,17 @@ La configuración se divide por responsabilidad en dos archivos principales:
 Resend API Key
 
 2. data/configProject.ts (Client-Side / UI)
-	Archivo que define la identidad y comportamiento visual del proyecto. No consume variables de entorno.
+   Archivo que define la identidad y comportamiento visual del proyecto. No consume variables de entorno.
+
 - Branding (Nombre, Descripción, Dominio)
 - SEO & Metadata (Keywords, Autor, Redes)
 - Configuración de Planes de Precios (UI Text)
 - Remitentes de correo visibles
 
 ### 🛠️ Scripts útiles
+
 Generar árbol de directorios (Windows):
+
 ```
 winget install GerdHoffmann.Tree
 & "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next' > tree.txt
@@ -198,52 +213,64 @@ winget install GerdHoffmann.Tree
 Scripts de mantenimiento ubicados en la carpeta `scripts/`.
 
 ### 1. `convert_pdf_to_jpg.js`
+
 Convierte la primera página de un PDF a imagen JPG.
 
 **Requisitos:**
+
 1.  **Ghostscript:**
-    * Descarga: [Ghostscript Releases](https://github.com/ArtifexSoftware/ghostpdl-downloads/releases)
-    * Busca el instalador (ej: `gs10060w64.exe`).
-    * ⚠️ **Importante:** Marca la casilla "Add to PATH" durante la instalación.
-    * Verificar versión: `gswin64c -version`
+    - Descarga: [Ghostscript Releases](https://github.com/ArtifexSoftware/ghostpdl-downloads/releases)
+    - Busca el instalador (ej: `gs10060w64.exe`).
+    - ⚠️ **Importante:** Marca la casilla "Add to PATH" durante la instalación.
+    - Verificar versión: `gswin64c -version`
 
 **Uso:**
+
 ```
 node scripts/convert_pdf_to_jpg.js
 ```
 
 ### 2. `convert-images-to-webp.js`
+
 Convierte imágenes `.png`, `.jpg`, `.jpeg` y `.svg` a formato moderno `.webp` en las mismas ubicaciones. Conserva los originales.
 
 **Dependencias:**
+
 ```
 npm i sharp glob
 ```
+
 **Uso:**
+
 ```
 node scripts/convert-images-to-webp.js
 ```
 
 ### 3. `convert-audio-to-webm.js`
+
 Convierte archivos de audio (`.mp3`, `.wav`, `.m4a`, `.aac`, `.ogg`) a `.webm` (codec Opus). Conserva los originales.
 
 **Requisitos:**
--   **FFmpeg:** Debe estar instalado y agregado a las variables de entorno (PATH).
--   (Opcional) `npm i glob`
-- 
-**Uso:**
+
+- **FFmpeg:** Debe estar instalado y agregado a las variables de entorno (PATH).
+- (Opcional) `npm i glob`
+- **Uso:**
+
 ```
 node scripts/convert-audio-to-webm.js
 ```
 
 ### 4. `normalize-names.js`
+
 Normaliza nombres de archivos y carpetas (elimina acentos, espacios por guiones bajos, pasa a minúsculas).
 
 **Flujo de trabajo recomendado:**
--   Navega a la carpeta que quieres normalizar.
--   Ejecuta el script apuntando a su ubicación.
+
+- Navega a la carpeta que quieres normalizar.
+- Ejecuta el script apuntando a su ubicación.
 
 **Uso:**
+
 ```
 # 1. Ir a la carpeta objetivo
 cd "ruta/a/tu/carpeta/public/certificates"
@@ -251,20 +278,26 @@ cd "ruta/a/tu/carpeta/public/certificates"
 # 2. Ejecutar script (ajusta la ruta según donde estés)
 node "../../scripts/normalize-names.js" -r
 ```
+
 **Modo prueba (Simulacro - No cambia nada, solo muestra logs):**
+
 ```
 node "../../scripts/normalize-names.js" --dry
 ```
 
 ### 💻 VSCode recomendado
+
 Configuración sugerida para ocultar ruido visual y mejorar la legibilidad.
 VSCode Setting JSon
+
 ```
 AppData\Roaming\Code\User\settings.json
 ```
+
 File Nesting & Exclusions:
+
 ```
-  "explorer.fileNesting.enabled": true,
+"explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "package.json": ",.eslintrc.json, next.config.js, package-lock.json, postcss.config.js, tailwind.config.ts, jsconfig.json, next-sitemap.config.js, tailwind.config.js,vercel.json,pnpm-lock.yaml,yarn.lock,tsconfig.json,postcss.config.mjs,next.config.ts,next-env.d.ts,eslint.config.mjs,.stylelintrc.json,config.ts,next-auth.d.ts,.dockerignore,Dockerfile,vite.config.ts,pnpm-workspace.yaml,astro.config.mjs,tailwind.config.mjs",
     "README.md": "tree.txt,llms.txt, AI_ARCHITECTURE.md, .cursorrules, .llmignore,.gitignore,.env.example,.env.local,.env*,config.js,configApi.js,config.ts,configApi.ts,llms.md",
@@ -283,6 +316,7 @@ File Nesting & Exclusions:
     "node_modules": true
   },
 ```
+
 Colores de interfaz (High Contrast Selection):
 
 ```
@@ -307,7 +341,9 @@ Colores de interfaz (High Contrast Selection):
     "editor.findMatchHighlightBorder": "#ffeb3b"
 },
 ```
+
 ### 💻 Claude Skills
+
 Skills recomendadas para Claude.
 
 ```
