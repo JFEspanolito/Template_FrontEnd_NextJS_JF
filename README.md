@@ -307,3 +307,24 @@ Colores de interfaz (High Contrast Selection):
     "editor.findMatchHighlightBorder": "#ffeb3b"
 },
 ```
+### 💻 Claude Skills
+Skills recomendadas para Claude.
+
+```
+npx claude-code-templates@latest --skill=analytics/google-analytics --yes
+npx claude-code-templates@latest --skill=business-marketing/seo-optimizer --yes
+npx claude-code-templates@latest --skill=creative-design/frontend-design --yes
+npx claude-code-templates@latest --skill=creative-design/ui-design-system --yes
+npx claude-code-templates@latest --skill=creative-design/web-design-guidelines --yes
+npx claude-code-templates@latest --skill=development/senior-frontend --yes
+npx claude-code-templates@latest --skill=development/senior-frontend --yes
+npx claude-code-templates@latest --skill=development/senior-architect --yes
+npx claude-code-templates@latest --skill=development/code-reviewer --yes
+npx claude-code-templates@latest --skill=railway/database --yes
+npx claude-code-templates@latest --skill=security/api-security-best-practices --yes
+npx claude-code-templates@latest --skill=security/vulnerability-scanner --yes
+npx claude-code-templates@latest --skill=security/top-web-vulnerabilities --yes
+npx claude-code-templates@latest --skill=security/html-injection-testing --yes
+npx claude-code-templates@latest --skill=sentry/find-bugs --yes
+npx claude-code-templates@latest --skill=sentry/find-bugs --yes
+```
