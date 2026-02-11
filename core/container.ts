@@ -1,39 +1,14 @@
-import "server-only"; // Seguridad extra
+import "server-only";
 
-// 1. Importar Implementaciones (Infraestructura)
-import { MongoInvoiceRepository } from "./Billing/Infrastructure/MongoInvoiceRepository";
-import { FacturaGreenAdapter } from "./Billing/Infrastructure/FacturaGreenAdapter";
-import type { IBillingGateway } from "./Billing/Domain/IBillingGateway";
+// 1. Importamos la infraestructura y el caso de uso
+//casos de uso
+import { MongoRepository } from "@/core/creature/infrastructure/MongoRepository";
+import { UploadCreature } from "@/core/creature/application/UploadCreature";
+// import { UpdateCreature } from "@/core/creature/application/UpdateCreature";
 
-// 2. Importar Casos de Uso (Application)
-import { GenerateInvoice } from "./Billing/Application/GenerateInvoice";
+// Instanciamos la infraestructura
+const creatureRepository = new MongoRepository();
 
-// 3. Instanciar Infraestructura (Singletons)
-const invoiceRepository = new MongoInvoiceRepository();
-
-class LazyBillingGateway implements IBillingGateway {
-  private implementation: IBillingGateway | null = null;
-
-  private getImplementation(): IBillingGateway {
-    if (!this.implementation) {
-      this.implementation = new FacturaGreenAdapter();
-    }
-
-    return this.implementation;
-  }
-
-  async createExternalInvoice(invoice: Parameters<IBillingGateway["createExternalInvoice"]>[0]) {
-    return this.getImplementation().createExternalInvoice(invoice);
-  }
-}
-
-const billingGateway = new LazyBillingGateway();
-
-// 4. Inyectar dependencias en los Casos de Uso
-export const generateInvoiceUseCase = new GenerateInvoice(
-  invoiceRepository,
-  billingGateway
-);
-
-// Aquí exportarías más casos de uso...
-// export const sendInvoiceEmailUseCase = new SendInvoiceEmail(invoiceRepository, mailer);
+// 2. Inyectamos esa instancia en el caso de uso y exportamos
+export const uploadCreatureUseCase = new UploadCreature(creatureRepository);
+// export const updateCreatureUseCase = new UpdateCreature(creatureRepository);
