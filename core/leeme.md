@@ -1,83 +1,162 @@
-# 🧠 CORE: Lógica de Negocio (Arquitectura DDD)
+# 🚀 Boilerplate: Next.js + DDD (Clean Architecture)
 
-Este directorio aísla la lógica de negocio pura del framework (Next.js). Aquí viven las reglas, validaciones y conexiones a datos.
+Este repositorio es una base sólida para proyectos que requieren una separación clara entre la lógica de negocio y la tecnología, utilizando Next.js (App Router) para el manejo de rutas y Zod para la integridad de los datos.
 
-## 🏗 ¿Qué es DDD (Domain-Driven Design)?
-Es una arquitectura que separa el **"Qué"** (Dominio/Reglas) del **"Cómo"** (Infraestructura/Base de Datos).
-* **Ventaja:** Puedes cambiar de MongoDB a SQL, o de Stripe a PayPal, sin romper la lógica de negocio.
+# Instalar Zod (si empiezas de cero)
 
-## 📂 Estructura del Directorio
-core/
-├── container.ts            # 💉 INYECCIÓN DE DEPENDENCIAS (Conecta todo aquí)
-├── Shared/                 # 🛠 Tipos y Errores comunes (AppError, etc.)
-└── [Modulo] (ej: Billing)/ # 📦 Contexto Delimitado (Bounded Context)
-    ├── Domain/             # 👑 REGLAS Y CONTRATOS (Puro TS, sin deps externas)
-    │   ├── Entity.ts       # Qué es (ej: Invoice)
-    │   └── IRepository.ts  # Qué necesitamos hacer (Interfaz)
-    ├── Application/        # 🎬 CASOS DE USO (Acciones)
-    │   └── CreateAction.ts # Orquesta: Recibe datos -> Valida -> Guarda
-    └── Infrastructure/     # 🔌 CABLES (Implementación Real)
-        ├── MongoRepo.ts    # Guarda en MongoDB
-        └── StripeApi.ts    # Conecta con API externa
+pnpm add zod
 
-## Cómo añadir una nueva API/Módulo
-- Crea la carpeta: core/NuevoModulo/ con las subcarpetas Domain, Application, Infrastructure.
-- Define el Dominio: Crea tu entidad (User.ts) y la interfaz del repositorio (IUserRepository.ts).
-- Crea el Caso de Uso: En Application, escribe la lógica (RegisterUser.ts) usando solo la interfaz del repositorio.
-- Implementa la Infra: En Infrastructure, escribe el código real de Mongoose o Fetch (MongoUserRepository.ts).
-- Conecta: Instancia la clase en core/container.ts y expórtala.
-- Usa: Importa el caso de uso en app/api/tu-ruta/route.ts.
+# Estructura del Proyecto
 
-## IMPORTANTE: Placeholder
-El módulo actual Billing y el adaptador de FacturaGreen son ejemplos de implementación (Placeholders) para ilustrar la arquitectura.
-No usar en producción sin revisar credenciales, URLs y validaciones finales.
-Los UUIDs y métodos de pago son simulados.
+La lógica central reside en `/core/`, manteniéndose independiente de los frameworks.
 
-## Conexión con APP/API
-Las rutas de Next.js (app/api/*) actúan solo como Callers (Controladores). No deben contener lógica de negocio, solo orquestación HTTP.
+## 🏗️ Capas del Core (/core/)
 
-### Flujo de Datos
-1. API Route recibe el Request HTTP.
-2. Importa el Caso de Uso ya listo desde core/container.ts.
-3. Ejecuta el método .execute().
-4. Devuelve JSON al cliente.
+Domain 🧠: Contiene las reglas esenciales.
 
-### Ejemplo de app\api\billing\route.ts:
+core/creature/domain/Creature.ts: Entidad con validaciones de negocio.
+
+core/creature/domain/CreatureRepository.ts: Contrato (interfaz) para persistencia.
+
+core/creature/domain/CreatureSchema.ts: Esquema de Zod para contratos de datos.
+
+Application 🎬: Orquestadores de casos de uso.
+
+core/creature/application/UploadCreature.ts: Proceso para validar y guardar.
+
+## Infrastructure 🛠️: Implementaciones técnicas.
+
+core/creature/infrastructure/MongoRepository.ts: Conexión real con la base de datos.
+
+### 1. Domain 🧠: Reglas Esenciales
+
+Es el corazón del sistema. Define qué es el objeto y sus reglas innegociables.
+
+**`core/creature/domain/CreatureSchema.ts`**
+
 ```
-import { NextResponse } from "next/server";
-import { generateInvoiceUseCase } from "@/core/container";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/libs/next-auth";
+import { z } from 'zod';
 
-export async function POST(req: Request) {
-  try {
-    const session = await getServerSession(authOptions);
+export const CreatureSchema = z.object({
+  name: z.string().min(3, "El nombre es muy corto"),
+  level: z.number().int().positive().max(20),
+  biome: z.string()
+});
 
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+export type CreatureInput = z.infer<typeof CreatureSchema>;
 
-    const body = await req.json();
-    const { items, taxId } = body;
+```
 
-    if (!items || !Array.isArray(items)) {
-      return NextResponse.json({ error: "Items are required" }, { status: 400 });
-    }
+**`core/creature/domain/Creature.ts`**
 
-    const invoice = await generateInvoiceUseCase.execute({
-      userId: session.user.id,
-      userEmail: session.user.email || "",
-      items: items,
-      taxId: taxId,
-    });
+```
+import { CreatureInput } from "./CreatureSchema";
 
-    return NextResponse.json({
-      success: true,
-      data: invoice.toPrimitives(),
-    });
-  } catch (error: any) {
-    console.error("Billing Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+export class Creature {
+  constructor(public readonly props: CreatureInput) {
+    // Validaciones de negocio adicionales si fueran necesarias
+    if (props.name === "Admin") throw new Error("Nombre no permitido");
   }
 }
+
 ```
+
+**`core/creature/domain/CreatureRepository.ts`**
+
+```
+import { Creature } from "./Creature";
+
+export interface CreatureRepository {
+  save(creature: Creature): Promise<void>;
+  findAll(): Promise<Creature[]>;
+}
+
+```
+
+### 2. Application 🎬: Orquestadores
+
+Coordina el flujo de datos entre la API y el dominio.
+
+**`core/creature/application/UploadCreature.ts`**
+
+```
+import { Creature } from "../domain/Creature";
+import { CreatureRepository } from "../domain/CreatureRepository";
+import { CreatureInput } from "../domain/CreatureSchema";
+
+export class UploadCreature {
+  constructor(private repository: CreatureRepository) {}
+
+  async execute(input: CreatureInput): Promise<void> {
+    const creature = new Creature(input);
+    await this.repository.save(creature);
+  }
+}
+
+```
+
+### 3. Infrastructure 🛠️: Implementación Técnica
+
+Detalles de bajo nivel (bases de datos, frameworks).
+
+**`core/creature/infrastructure/MongoRepository.ts`**
+
+```
+import { CreatureRepository } from "../domain/CreatureRepository";
+import { Creature } from "../domain/Creature";
+
+export class MongoRepository implements CreatureRepository {
+  async save(creature: Creature): Promise<void> {
+    // Lógica real de MongoDB usando fetch o un driver (mongoose/mongodb)
+    console.log("Guardando en Mongo:", creature.props);
+  }
+
+  async findAll(): Promise<Creature[]> {
+    return []; // Implementación de lectura
+  }
+}
+
+```
+
+---
+
+## 🛣️ Rutas de la API (Next.js App Router)
+
+En Next.js, las APIs se definen en la carpeta `app/`.
+
+### `src/app/api/creature/route.ts`
+
+```
+import { NextResponse } from 'next/server';
+import { CreatureSchema } from '@/core/creature/domain/CreatureSchema';
+import { UploadCreature } from '@/core/creature/application/UploadCreature';
+import { MongoRepository } from '@/core/creature/infrastructure/MongoRepository';
+
+const repo = new MongoRepository();
+const uploadUseCase = new UploadCreature(repo);
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const result = CreatureSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(result.error.format(), { status: 400 });
+    }
+
+    await uploadUseCase.execute(result.data);
+    return NextResponse.json({ message: "Creado" }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+  }
+}
+
+```
+
+---
+
+## 🛡️ Seguridad
+
+1. **Zod Parsing 🧼**: Se usa `safeParse` en la entrada de la API para evitar inyecciones de datos basura.
+2. **BtnSubir (Frontend) 🖱️**: Controlar el estado de carga para evitar el "doble clic" y spam.
+3. **Variables de Entorno 🔐**: Uso de `.env.local` para proteger el URI de la base de datos.

@@ -1,39 +1,14 @@
 import "server-only"; // Seguridad extra
 
-// 1. Importar Implementaciones (Infraestructura)
-import { MongoInvoiceRepository } from "./Billing/Infrastructure/MongoInvoiceRepository";
-import { FacturaGreenAdapter } from "./Billing/Infrastructure/FacturaGreenAdapter";
-import type { IBillingGateway } from "./Billing/Domain/IBillingGateway";
+// src/core/shared/container.ts
+import { MongoRepository } from "@/core/creature/infrastructure/MongoRepository";
+import { UploadCreature } from "@/core/creature/application/UploadCreature";
 
-// 2. Importar Casos de Uso (Application)
-import { GenerateInvoice } from "./Billing/Application/GenerateInvoice";
+// 1. Instanciamos la infraestructura
+const creatureRepository = new MongoRepository();
 
-// 3. Instanciar Infraestructura (Singletons)
-const invoiceRepository = new MongoInvoiceRepository();
+// 2. Inyectamos esa instancia en el caso de uso
+const uploadCreatureUseCase = new UploadCreature(creatureRepository);
 
-class LazyBillingGateway implements IBillingGateway {
-  private implementation: IBillingGateway | null = null;
-
-  private getImplementation(): IBillingGateway {
-    if (!this.implementation) {
-      this.implementation = new FacturaGreenAdapter();
-    }
-
-    return this.implementation;
-  }
-
-  async createExternalInvoice(invoice: Parameters<IBillingGateway["createExternalInvoice"]>[0]) {
-    return this.getImplementation().createExternalInvoice(invoice);
-  }
-}
-
-const billingGateway = new LazyBillingGateway();
-
-// 4. Inyectar dependencias en los Casos de Uso
-export const generateInvoiceUseCase = new GenerateInvoice(
-  invoiceRepository,
-  billingGateway
-);
-
-// Aquí exportarías más casos de uso...
-// export const sendInvoiceEmailUseCase = new SendInvoiceEmail(invoiceRepository, mailer);
+// 3. Exportamos para que la API (route.ts) lo use
+export { uploadCreatureUseCase };
