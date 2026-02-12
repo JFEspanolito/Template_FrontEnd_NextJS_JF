@@ -28,6 +28,20 @@ Ahora incluye una arquitectura de **Núcleo (Core)** basada en **DDD (Domain-Dri
 | **Theming:** next-themes                              | `next-themes`                                      |
 | **Extras:** Top loader, tooltips, syntax highlighting | `nextjs-toploader`, `crisp-sdk-web`                |
 
+Si deseas utilizar
+
+```
+pnpm add -D vitest
+```
+
+Recuerda que debes configurar package.json
+
+```
+"scripts": {
+  "test": "vitest"
+}
+```
+
 ---
 
 ## ⚠️ Nota sobre autenticación
