@@ -14,10 +14,21 @@ const PATTERN = "**/*.{mp3,wav,m4a,aac,ogg}";
   try {
     const files = glob.sync(PATTERN, {
       nodir: true,
-      ignore: ["**/node_modules/**", "dist/**", ".next/**"],
+      ignore: [
+        "**/node_modules/**",
+        "dist/**",
+        ".next/**",
+        ".astro",
+        ".vscode",
+        "**/.agent",
+        "**/.claude",
+        "**/.codex",
+        "**/.cursor",
+        "**/.gemini",
+        "**/.opencode",
+        "dist",
+      ],
     });
-
-    
 
     for (const file of files) {
       const out = file.replace(/\.(mp3|wav|m4a|aac|ogg)$/i, ".webm");
@@ -35,8 +46,6 @@ const PATTERN = "**/*.{mp3,wav,m4a,aac,ogg}";
         console.error(`Failed convert ${file}:`, err?.message || String(err));
       }
     }
-
-    
   } catch (err) {
     console.error("Error during conversion:", err?.message || String(err));
     process.exit(1);
