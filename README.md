@@ -221,7 +221,7 @@ Generar árbol de directorios (Windows):
 
 ```
 winget install GerdHoffmann.Tree
-& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next' > tree.txt
+& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next|dist|build|.astro|.next|.vscode|.agent' > tree.txt
 ```
 
 Scripts de mantenimiento ubicados en la carpeta `scripts/`.
@@ -297,6 +297,24 @@ node "../../scripts/normalize-names.js" -r
 
 ```
 node "../../scripts/normalize-names.js" --dry
+```
+
+### 💻 Comandos para npm
+
+Ejecuta este comando para limpiar y recuperar espacio en tu disco.
+
+```
+npx npkill
+```
+
+React Doctor es una herramienta que escanéa tu código para buscar antipatrones. Busca cosas como:
+
+- useEffects innecesarios.
+- Arregla bugs de accesibilidad.
+- Investiga Prop Drilling, recomienda contexto o composición.
+
+```
+npx -y react-doctor@late
 ```
 
 ### 💻 VSCode recomendado

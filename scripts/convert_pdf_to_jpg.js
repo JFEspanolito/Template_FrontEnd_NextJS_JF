@@ -10,8 +10,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const pdfDir = path.join(__dirname, '../public/certificates');
-const outputDir = path.join(__dirname, '../public/certificates');
+const pdfDir = path.join(__dirname, '../public/');
+const outputDir = path.join(__dirname, '../public/pdf');
 
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });

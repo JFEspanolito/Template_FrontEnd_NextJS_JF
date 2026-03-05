@@ -1,7 +1,8 @@
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
+# -----------------------------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------------------------
+node_modules/
+.pnp
 .pnp.js
 .yarn/*
 !.yarn/patches
@@ -9,45 +10,64 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# -----------------------------------------------------------------------------
+# Framework & Build Output (Next.js / Astro / General)
+# -----------------------------------------------------------------------------
 /.next/
 /out/
+/build/
+/dist/
+.astro/
+.vercel/
 
-# production
-/build
+# -----------------------------------------------------------------------------
+# Environment Variables
+# -----------------------------------------------------------------------------
+# Ignore all .env files...
+.env
+.env*
+# ...but allow the example file for documentation
+!.env.example
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# -----------------------------------------------------------------------------
+# Logs & Debug
+# -----------------------------------------------------------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 .pnpm-debug.log*
 
-# environment files
-.env*
-!.env.example
-# (includes .env, .env.local, .env.production, etc.)
-
-# vercel
-.vercel
-
-# typescript
+# -----------------------------------------------------------------------------
+# TypeScript & IDE Types
+# -----------------------------------------------------------------------------
 *.tsbuildinfo
 next-env.d.ts
 
-# public assets
+# -----------------------------------------------------------------------------
+# IDE & System Files
+# -----------------------------------------------------------------------------
+.DS_Store
+*.pem
+.idea/
+.vscode/
+# Windows metadata
+*:Zone.Identifier
+
+# -----------------------------------------------------------------------------
+# Generated Public Assets (next-sitemap, etc.)
+# -----------------------------------------------------------------------------
 public/robots.txt
 public/sitemap.xml
 public/sitemap-0.xml
 
-# Windows metadata
-*:Zone.Identifier
 
-# IDE and AI tools
-.vscode/
+#--------------------------------------------------------------------------------
+# AI Skills
+#-------------------------------------------------------------------------------
+.agent
+.claude
+.codex
+.cursor
+.gemini
+.opencode

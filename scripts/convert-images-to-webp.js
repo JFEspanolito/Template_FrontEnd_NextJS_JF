@@ -8,7 +8,7 @@ const glob = require('glob');
 const sharp = require('sharp');
 
 // 1. PATTERN actualizado para incluir jpg 
-const PATTERN = '**/*.{png,jpg,jpeg}';
+    const files = glob.sync(PATTERN, { nodir: true, ignore: ["**/node_modules/**", "dist/**", ".next/**",".astro",".vscode","**/.agent","**/.claude","**/.codex","**/.cursor","**/.gemini","**/.opencode","dist"] });
 
 (async () => {
   try {
