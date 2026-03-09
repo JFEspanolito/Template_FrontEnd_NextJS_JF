@@ -151,11 +151,6 @@ export default function AnalyticsBanner() {
         </div>
       )}
 
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `(function () { try { console.clear(); } catch (e) {} })();`,
-        }}
-      />
     </>
   );
 }

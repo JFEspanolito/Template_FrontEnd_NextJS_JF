@@ -1,8 +1,11 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
-import configProject from "@/data/configProject";
-import configApi from "@/configApi.js"
+
+// Auth callback URL — read from public env var (safe for client bundle).
+// IMPORTANT: configApi.js uses "server-only" and MUST NOT be imported here.
+const AUTH_CALLBACK_URL =
+  process.env.NEXT_PUBLIC_AUTH_CALLBACK_URL || "/dashboard";
 
 const apiClient = axios.create({
   baseURL: "/api",
@@ -17,7 +20,7 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401) {
       toast.error("Please login");
-      return signIn(undefined, { callbackUrl: configApi.auth.callbackUrl });
+      return signIn(undefined, { callbackUrl: AUTH_CALLBACK_URL });
     } else if (error.response?.status === 403) {
       message = "Pick a plan to use this feature";
     } else {

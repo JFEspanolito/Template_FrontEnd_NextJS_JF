@@ -139,7 +139,7 @@ export function SignInForm({ open = true, onClose }: Props) {
         </div>
 
         <div className="p-6 space-y-4">
-          <p className="text-sm text-neutral">{t("signInDescription")}</p>
+          <p className="text-sm text-[var(--text)]">{t("signInDescription")}</p>
 
           {/* Email/Password */}
           <form onSubmit={emailPasswordSignIn} className="space-y-3">

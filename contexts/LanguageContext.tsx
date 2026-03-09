@@ -67,22 +67,34 @@ const translations = {
   },
 };
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("ES");
+export function LanguageProvider({
+  children,
+  initialLanguage = "ES",
+}: {
+  children: React.ReactNode;
+  initialLanguage?: Language;
+}) {
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const saved = localStorage.getItem("language") as Language;
     if (saved && (saved === "ES" || saved === "EN")) {
       setLanguageState(saved);
+      document.cookie = `language=${saved}; path=/; max-age=31536000; samesite=lax`;
+      return;
     }
-  }, []);
+
+    localStorage.setItem("language", initialLanguage);
+    document.cookie = `language=${initialLanguage}; path=/; max-age=31536000; samesite=lax`;
+  }, [initialLanguage]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     if (typeof window !== "undefined") {
       localStorage.setItem("language", lang);
+      document.cookie = `language=${lang}; path=/; max-age=31536000; samesite=lax`;
     }
   };
 

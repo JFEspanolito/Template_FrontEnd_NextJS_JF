@@ -17,6 +17,16 @@ const cspHeader = `
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  // ── Image optimization ───────────────────────────────────────────
+  images: {
+    formats: ["image/avif", "image/webp"],
+    // Add remote image domains here when needed:
+    // remotePatterns: [
+    //   { protocol: "https", hostname: "lh3.googleusercontent.com" },
+    //   { protocol: "https", hostname: "avatars.githubusercontent.com" },
+    // ],
+  },
+
   async headers() {
     return [
       {

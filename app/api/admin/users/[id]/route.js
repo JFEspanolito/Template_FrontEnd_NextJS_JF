@@ -8,7 +8,7 @@ import User from "@/models/User";
 export const dynamic = "force-dynamic";
 
 // GET /api/admin/users/[id]
-export async function GET(req, { params }) {
+export async function GET(req, context) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -16,7 +16,8 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
+    // Next.js 15+: params is a Promise and must be awaited
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
@@ -31,13 +32,13 @@ export async function GET(req, { params }) {
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("❌ Error fetching user:", error?.message || String(error));
+    console.error("Error fetching user:", error?.message || String(error));
     return NextResponse.json({ error: "Error fetching user" }, { status: 500 });
   }
 }
 
 // PUT /api/admin/users/[id]
-export async function PUT(req, { params }) {
+export async function PUT(req, context) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -45,7 +46,8 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
+    // Next.js 15+: params is a Promise and must be awaited
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
@@ -78,7 +80,7 @@ export async function PUT(req, { params }) {
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("❌ Error updating user:", error?.message || String(error));
+    console.error("Error updating user:", error?.message || String(error));
     return NextResponse.json({ error: "Error updating user" }, { status: 500 });
   }
 }

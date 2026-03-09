@@ -122,21 +122,11 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session?.user) {
-        // token.sub may be undefined; assign with a safe cast
         (session.user as any).id = token.sub;
-
-        // Always fetch fresh role from database when possible
-        try {
-          if (token.sub) {
-            const dbUser = await User.findById(token.sub as string);
-            (session.user as any).role = dbUser?.role ?? (token as any)?.role ?? "user";
-          } else {
-            (session.user as any).role = (token as any)?.role ?? "user";
-          }
-        } catch (error) {
-          console.error("Error fetching user role:", (error as any)?.message || String(error));
-          (session.user as any).role = (token as any)?.role ?? "user";
-        }
+        // Read role from JWT token — avoids a DB query on every session check.
+        // The JWT callback already stores/refreshes the role from the DB when
+        // the user logs in or when trigger === "update".
+        (session.user as any).role = (token as any)?.role ?? "user";
       }
       return session;
     },

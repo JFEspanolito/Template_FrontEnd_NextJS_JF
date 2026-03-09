@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
 /* Shared tokens (theme-agnostic) — keep minimal values here */
 :root {
