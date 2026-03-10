@@ -43,7 +43,7 @@ export async function POST(req) {
       });
     } catch (e) {
       console.error(e?.message || String(e));
-      return NextResponse.json({ error: e?.message }, { status: 500 });
+      return NextResponse.json({ error: "Failed to create billing portal" }, { status: 500 });
     }
   } else {
     // Not Signed in

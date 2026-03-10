@@ -23,8 +23,9 @@ export async function POST(req) {
     // }
 
     return NextResponse.json({});
-    } catch (e) {
+  } catch (e) {
     console.error(e?.message || String(e));
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    // Never expose internal error messages to the client
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

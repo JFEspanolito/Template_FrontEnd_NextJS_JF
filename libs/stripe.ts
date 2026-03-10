@@ -1,5 +1,19 @@
 import Stripe from "stripe";
 
+// ── Stripe Singleton ─────────────────────────────────────────────────
+// Never instantiate Stripe per-request; reuse a module-level instance.
+let _stripe: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!_stripe) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error("Missing STRIPE_SECRET_KEY env var");
+    _stripe = new Stripe(key);
+  }
+  return _stripe;
+}
+
+// ── Types ────────────────────────────────────────────────────────────
 interface User {
   customerId?: string;
   email?: string;
@@ -25,7 +39,7 @@ export const createCheckout = async ({
   clientReferenceId,
   user,
 }: CreateCheckoutParams): Promise<string | null> => {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const stripe = getStripe();
 
   const extraParams: any = {};
 
@@ -72,7 +86,7 @@ export const createCheckout = async ({
 // This is used to create Customer Portal sessions, so users can manage their subscriptions (payment methods, cancel, etc..)
 export const createCustomerPortal = async ({ customerId, returnUrl }: { customerId: string; returnUrl: string }): Promise<string | null> => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    const stripe = getStripe();
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
@@ -86,10 +100,10 @@ export const createCustomerPortal = async ({ customerId, returnUrl }: { customer
   }
 };
 
-// This is used to get the uesr checkout session and populate the data so we get the planId the user subscribed to
+// This is used to get the user checkout session and populate the data so we get the planId the user subscribed to
 export const findCheckoutSession = async (sessionId: string): Promise<Stripe.Checkout.Session | null> => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    const stripe = getStripe();
 
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["line_items"],

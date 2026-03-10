@@ -55,7 +55,7 @@ export const getSEOTags = ({
       title: openGraph?.title || config.appName,
       description: openGraph?.description || config.appDescription,
       card: "summary_large_image",
-      creator: "@marc_louvion",
+      creator: config.twitter ?? undefined,
     },
 
     ...(canonicalUrlRelative && {
@@ -80,22 +80,10 @@ export const renderSchemaTags = () => {
           url: `https://${config.domainName}/`,
           author: {
             "@type": "Person",
-            name: "Marc Lou",
+            name: config.author,
           },
-          datePublished: "2023-08-01",
-          applicationCategory: "EducationalApplication",
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            ratingCount: "12",
-          },
-          offers: [
-            {
-              "@type": "Offer",
-              price: "9.00",
-              priceCurrency: "USD",
-            },
-          ],
+          datePublished: new Date().toISOString().split("T")[0],
+          applicationCategory: "BusinessApplication",
         }),
       }}
     ></script>

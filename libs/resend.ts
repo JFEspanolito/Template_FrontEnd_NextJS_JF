@@ -1,12 +1,21 @@
 import { Resend } from "resend";
 import config from "@/data/configProject";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY is not set");
+// ── Lazy singleton ───────────────────────────────────────────────────
+// Don't throw at module-level: it would crash the entire app on import
+// even if email isn't needed for the current request.
+let _resend: Resend | null = null;
+
+function getResend(): Resend {
+  if (!_resend) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) throw new Error("RESEND_API_KEY is not set");
+    _resend = new Resend(apiKey);
+  }
+  return _resend;
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+// ── Types ────────────────────────────────────────────────────────────
 interface SendEmailParams {
   to: string | string[];
   subject: string;
@@ -28,6 +37,8 @@ interface SendEmailParams {
  * @returns {Promise<Object>} A Promise that resolves with the email sending result data.
  */
 export const sendEmail = async ({ to, subject, text, html, replyTo }: SendEmailParams) => {
+  const resend = getResend();
+
   const { data, error } = await resend.emails.send({
     from: config.resend.fromAdmin,
     to,

@@ -2,9 +2,12 @@ import config from "@/data/configProject";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import { Footer } from "@/layout/Footer";
 import { Header } from "@/layout/Header";
+import AnalyticsBanner from "@/layout/Analytics";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import ThemeProviderWrapper from "@/components/ui/ThemeProvider";
 import Oneko from "@/components/ui/oneko";
@@ -66,11 +69,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(config.siteUrl),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const languageCookie = cookieStore.get("language")?.value;
+  const initialLanguage = languageCookie === "EN" ? "EN" : "ES";
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -78,19 +85,25 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--background)] text-[var(--foreground)]`}
       >
         <ThemeProviderWrapper>
-          <LanguageProvider>
+          <LanguageProvider initialLanguage={initialLanguage}>
+            {/* Toast notifications (react-hot-toast) */}
+            <Toaster position="bottom-center" />
+
             <Oneko />
-            
-            {/* Header en la parte superior */}
+
+            {/* Header — wrapped in Suspense because it uses useSearchParams */}
             <Suspense fallback={null}>
               <Header />
             </Suspense>
 
-            {/* Contenido de la página */}
-            {children}
+            {/* Page content */}
+            <main className="min-h-[calc(100vh-8rem)]">{children}</main>
 
-            {/* Footer al final */}
+            {/* Footer */}
             <Footer />
+
+            {/* Analytics & cookie consent banner */}
+            <AnalyticsBanner />
           </LanguageProvider>
         </ThemeProviderWrapper>
       </body>
