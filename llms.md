@@ -1,5 +1,21 @@
 # Project: Next.js 16 + React 19 Template (Modern Stack)
 
+## Shared AI Permission Policy
+
+Canonical policy file: `/.llmrules`.
+
+This repository uses `/.llmrules` as the baseline allow/deny permission policy for AI agents.
+Some tools may not enforce this file automatically, so each client must map these rules
+to its native permission system.
+
+If a client cannot read `/.llmrules`, apply equivalent restrictions manually.
+
+Recommended precedence:
+
+1. Client-native security policy (hard enforcement)
+2. `/.llmrules` (repository baseline)
+3. `llms.md`, `CLAUDE.md`, or other guidance files (behavioral/context guidance)
+
 ## 1. Project Overview
 A minimal, scalable boilerplate for Next.js 16 (App Router) and React 19.
 Designed for rapid development of SaaS, dashboards, and landing pages.

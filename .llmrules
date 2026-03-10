@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "allow": ["Read:*", "Bash:git:*", "Write:**.md"],
+    "deny": ["Read:env:*", "Bash:sudo:*"]
+  }
+}
