@@ -1,0 +1,130 @@
+import "server-only";
+
+const requireEnv = (key: string): string => {
+  const value = process.env[key];
+  if (!value) throw new Error(`Missing required env var: ${key}`);
+  return value;
+};
+
+interface ConfigApi {
+  facturaGreen: {
+    apiKey: string;
+    businessUuid: string;
+    accountUuid: string;
+    url: string;
+  };
+  nextAuth: {
+    url: string;
+    secret: string;
+    require: { secret: () => string };
+  };
+  auth: {
+    callbackUrl: string;
+  };
+  googleOAuth: {
+    clientId: string;
+    clientSecret: string;
+    require: { clientId: () => string; clientSecret: () => string };
+  };
+  mongodb: {
+    uri: string;
+    require: { uri: () => string };
+  };
+  stripe: {
+    publicKey: string;
+    secretKey: string;
+    webhookSecret: string;
+    require: { secretKey: () => string; webhookSecret: () => string };
+  };
+  resend: {
+    apiKey: string;
+    fromNoReply: string;
+    fromAdmin: string;
+    require: { apiKey: () => string };
+  };
+  aws: {
+    bucket: string;
+    bucketUrl: string;
+    cdn: string;
+  };
+  crisp: {
+    id: string;
+  };
+  stripePrices: {
+    starter: string;
+    advanced: string;
+  };
+}
+
+const configApi: ConfigApi = {
+  facturaGreen: {
+    apiKey: process.env.FACTURA_GREEN_API_KEY || "",
+    businessUuid: process.env.FACTURA_GREEN_BUSINESS_UUID || "",
+    accountUuid: process.env.FACTURA_GREEN_ACCOUNT_UUID || "0000",
+    url: process.env.FACTURA_GREEN_URL || "https://api.facturagreen.dev/v1",
+  },
+
+  nextAuth: {
+    url: process.env.NEXTAUTH_URL || "http://localhost:3000",
+    secret: process.env.NEXTAUTH_SECRET || "",
+    require: {
+      secret: () => requireEnv("NEXTAUTH_SECRET"),
+    },
+  },
+
+  auth: {
+    callbackUrl: process.env.NEXT_PUBLIC_AUTH_CALLBACK_URL || "/dashboard",
+  },
+
+  googleOAuth: {
+    clientId: process.env.GOOGLE_ID || "",
+    clientSecret: process.env.GOOGLE_SECRET || "",
+    require: {
+      clientId: () => requireEnv("GOOGLE_ID"),
+      clientSecret: () => requireEnv("GOOGLE_SECRET"),
+    },
+  },
+
+  mongodb: {
+    uri: process.env.MONGODB_URI || "",
+    require: {
+      uri: () => requireEnv("MONGODB_URI"),
+    },
+  },
+
+  stripe: {
+    publicKey: process.env.STRIPE_PUBLIC_KEY || "",
+    secretKey: process.env.STRIPE_SECRET_KEY || "",
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
+    require: {
+      secretKey: () => requireEnv("STRIPE_SECRET_KEY"),
+      webhookSecret: () => requireEnv("STRIPE_WEBHOOK_SECRET"),
+    },
+  },
+
+  resend: {
+    apiKey: process.env.RESEND_API_KEY || "",
+    fromNoReply: process.env.RESEND_FROM_NO_REPLY || "noreply@example.com",
+    fromAdmin: process.env.RESEND_FROM_ADMIN || "admin@example.com",
+    require: {
+      apiKey: () => requireEnv("RESEND_API_KEY"),
+    },
+  },
+
+  aws: {
+    bucket: process.env.NEXT_PUBLIC_AWS_BUCKET || "",
+    bucketUrl: process.env.NEXT_PUBLIC_AWS_BUCKET_URL || "",
+    cdn: process.env.NEXT_PUBLIC_AWS_CDN || "",
+  },
+
+  crisp: {
+    id: process.env.NEXT_PUBLIC_CRISP_ID || "",
+  },
+
+  stripePrices: {
+    starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+    advanced: process.env.NEXT_PUBLIC_STRIPE_PRICE_ADVANCED || "",
+  },
+};
+
+export default configApi;

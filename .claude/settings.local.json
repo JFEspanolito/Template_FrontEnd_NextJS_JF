@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read:*",
+      "Bash:git:*",
+      "Write:**.md",
+      "Bash(find /e/Archivos/Documents/devcode/Template_FrontEnd_NextJS_JF -path */node_modules -prune -o -name *.test.* -o -name *.spec.*)",
+      "Bash(ls \"e:/Archivos/Documents/devcode/Template_FrontEnd_NextJS_JF/\"configApi*)",
+      "Bash(pnpm lint:*)",
+      "Bash(npx next:*)"
+    ],
+    "deny": [
+      "Read:env:*",
+      "Bash:sudo:*"
+    ]
+  }
+}

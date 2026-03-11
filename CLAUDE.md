@@ -27,16 +27,16 @@ Full-stack **Next.js 16 (App Router)** boilerplate with TypeScript, Tailwind CSS
 - Layouts should remain server components when possible.
 
 ### Import Aliases
-- Use `@/` for all imports (maps to project root via `tsconfig.json`).
+- Use `@/` for all imports (maps to `src/` via `tsconfig.json`).
 - Example: `import { connectMongo } from "@/libs/db"`.
 
 ### Configuration Split
 | File                     | Scope        | Purpose                                    |
 | ------------------------ | ------------ | ------------------------------------------ |
-| `configApi.js`           | Server ONLY  | Secrets, API keys (`import "server-only"`)  |
+| `data/configApi.ts`      | Server ONLY  | Secrets, API keys (`import "server-only"`)  |
 | `data/configProject.ts`  | Client-safe  | App name, SEO, colors, social links         |
 
-> **CRITICAL**: Never import `configApi.js` in client components or files that run in the browser. It uses the `"server-only"` package and will throw at build time.
+> **CRITICAL**: Never import `configApi.ts` in client components or files that run in the browser. It uses the `"server-only"` package and will throw at build time.
 
 ### Database
 - Always use `connectMongo()` from `@/libs/db` before any Mongoose operation.
@@ -69,25 +69,28 @@ Full-stack **Next.js 16 (App Router)** boilerplate with TypeScript, Tailwind CSS
 ## Key Directories
 
 ```
-app/                    # Next.js App Router pages & API routes
-  (pages)/              # Public pages (Contact, FAQ)
-  (private)/            # Auth-protected pages (dashboard, admin)
-  api/                  # API endpoints
-components/             # Reusable UI components
-  auth/                 # Authentication components
-  ui/                   # Generic UI (cards, modals, badges)
-  buttons/              # Button components
-  icons/                # SVG icon components
-contexts/               # React contexts (LanguageContext)
-core/                   # Hexagonal architecture domain layer
-  creature/             # Example domain: entity, repo, use case
-  shared/               # Shared types and errors
-data/                   # Client-safe configuration
-layout/                 # Layout components (Header, Footer, Analytics)
-libs/                   # Utility libraries (db, stripe, auth, seo, api)
-models/                 # Mongoose models (User, Lead, Invoice)
-scripts/                # Build/conversion scripts
-styles/                 # Global CSS
+src/
+  app/                    # Next.js App Router pages & API routes
+    (pages)/              # Public pages (Contact, FAQ)
+    (private)/            # Auth-protected pages (dashboard, admin)
+    api/                  # API endpoints
+  components/             # Reusable UI components
+    auth/                 # Authentication components
+    buttons/              # Button components
+    icons/                # SVG icon components
+    layout/               # Layout components (Header, Footer, Analytics)
+    pagination/           # Pagination components
+    sections/             # Page sections (FAQ, etc.)
+    ui/                   # Generic UI (cards, modals, badges)
+  contexts/               # React contexts (LanguageContext)
+  core/                   # Hexagonal architecture domain layer
+    creature/             # Example domain: entity, repo, use case
+    shared/               # Shared types and errors
+  data/                   # Configuration (configProject.ts, configApi.ts)
+  libs/                   # Utility libraries (db, stripe, auth, seo, api)
+  models/                 # Mongoose models (User, Lead, Invoice)
+  styles/                 # Global CSS
+scripts/                  # Build/conversion scripts (root level)
 ```
 
 ## Commands
