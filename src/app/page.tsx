@@ -1,11 +1,7 @@
-"use client";
-
-import { useState } from "react";
-import { Bell, Box, Boxes, Cuboid, Home as HomeIcon, Rocket, ScanSearch, Shield, Sparkles, Star } from "lucide-react";
+import { Box } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Card from "@/components/ui/card";
-import MagicDock from "@/components/ui/magicdock";
 import STLViewer from "@/components/ui/STLViewer";
 import { TextSpotlight } from "@/components/ui/text-spotlight";
 import {
@@ -31,70 +27,9 @@ import {
 } from "@/components/ui/top-secret";
 
 import Button from "@/components/buttons/ButtonBasic";
+import HomeDock from "@/components/sections/HomeDock";
 
 export default function Home() {
-  const [dockMessage, setDockMessage] = useState("Haz click en un item del dock.");
-
-  const dockItems = [
-    {
-      id: 1,
-      icon: <HomeIcon className="h-4 w-4 text-white" />,
-      label: "Home",
-      onClick: () => setDockMessage("MagicDock: Home activado."),
-    },
-    {
-      id: 2,
-      icon: <Bell className="h-4 w-4 text-white" />,
-      label: "Alerts",
-      onClick: () => setDockMessage("MagicDock: Alerts activado."),
-    },
-    {
-      id: 3,
-      icon: <Rocket className="h-4 w-4 text-white" />,
-      label: "Launch",
-      onClick: () => setDockMessage("MagicDock: Launch activado."),
-    },
-  ];
-
-  const expandableCards = [
-    {
-      id: 1,
-      content: (
-        <div className="flex h-full flex-col justify-end bg-[linear-gradient(135deg,#0f172a,#1d4ed8)] p-5 text-white">
-          <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-            <Boxes className="h-5 w-5" />
-          </div>
-          <h3 className="text-xl font-semibold">Panel A</h3>
-          <p className="mt-1 text-sm text-white/75">Pasa el cursor para expandir esta tarjeta.</p>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      content: (
-        <div className="flex h-full flex-col justify-end bg-[linear-gradient(135deg,#3f6212,#84cc16)] p-5 text-black">
-          <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-black/10">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <h3 className="text-xl font-semibold">Panel B</h3>
-          <p className="mt-1 text-sm text-black/70">Cada item se entrega una sola vez al componente.</p>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      content: (
-        <div className="flex h-full flex-col justify-end bg-[linear-gradient(135deg,#4c0519,#fb7185)] p-5 text-white">
-          <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-            <Shield className="h-5 w-5" />
-          </div>
-          <h3 className="text-xl font-semibold">Panel C</h3>
-          <p className="mt-1 text-sm text-white/75">Ideal para hero blocks o listas destacadas.</p>
-        </div>
-      ),
-    },
-  ];
-
   return (
     <div
       className="relative min-h-screen font-sans"
@@ -204,7 +139,7 @@ export default function Home() {
           </TopSecretPortal>
         </TopSecret>
         MagicDock (on bot)
-        <MagicDock items={dockItems} variant="tooltip" hoverDistance="8px" />
+        <HomeDock />
       </div>
     </div>
   );

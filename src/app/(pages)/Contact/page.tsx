@@ -1,5 +1,3 @@
-"use client";
-
 import configProject from "@/data/configProject";
 
 export default function Contact() {
