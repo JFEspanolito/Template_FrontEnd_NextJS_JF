@@ -60,7 +60,7 @@ Este repositorio incluye un sistema de archivos en la carpeta `AI/` diseñado pa
 | **Framework**    | Next.js 15.x/16.x (App Router)          |
 | **Arquitectura** | DDD (Domain-Driven Design)              |
 | **Estado**       | Nano Stores (`@nanostores/react`)       |
-| **Estilos**      | Tailwind CSS v4 + DaisyUI               |
+| **Estilos**      | Tailwind CSS v4                         |
 | **Auth**         | NextAuth.js v4 (Middleware Protection)  |
 | **Persistencia** | MongoDB + Mongoose (Repository Pattern) |
 | **Validación**   | Zod (Schemas en la capa de Aplicación)  |
@@ -72,8 +72,8 @@ Este repositorio incluye un sistema de archivos en la carpeta `AI/` diseñado pa
 ### 1. Clonación e Instalación
 
 ```bash
-git clone [URL_DEL_REPO]
-cd MyNextJFTemplate
+git clone https://github.com/JFEspanolito/Template_FrontEnd_NextJS_JF.git
+cd Template_FrontEnd_NextJS_JF
 pnpm install
 
 ```
@@ -141,3 +141,8 @@ El sistema incluye scripts en `/scripts` para la optimización automática de ac
 - `convert_pdf_to_jpg.js`: Generación de vistas previas de documentos mediante la conversión de la primera página de archivos PDF a imagen JPG, utilizando ImageMagick y Ghostscript.
 - `normalize-names.js`: Estandarización de nomenclaturas en el sistema de archivos (eliminación de acentos, conversión a minúsculas y sustitución de caracteres especiales por guiones bajos) para garantizar compatibilidad total en despliegues.
 - `rename_files_from_x_to_numberSerie.js`: Indexación y renombrado masivo de archivos en secuencias numéricas (ej. 00, 01, 02), ideal para la gestión sistemática de activos repetitivos.
+- Generar árbol de directorios (Windows):
+```
+winget install GerdHoffmann.Tree
+& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next|dist|build|.astro|.next|.vscode|.agent' > tree.txt
+```
