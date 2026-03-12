@@ -60,16 +60,39 @@ Si buscas algo, usa estos sensores (grep/fd):
 
 ---
 
-## MATRIZ DE SKILLS (RESUMEN OPERATIVO)
+## MATRIZ DE SKILLS (MANIFIESTO OPERATIVO)
 
-| Skill Name | Cuándo activarla |
-| --- | --- |
-| **senior-architect** | Decisiones de estructura, diagramas de flujo y patrones SOLID. |
-| **frontend-design** | Creación de componentes UI siguiendo el DESIGN_SYSTEM.md. |
-| **react-best-practices** | Optimización de Server Components y gestión de hidratación. |
-| **code-reviewer** | Análisis de PRs buscando violaciones del Firewall de Seguridad. |
-| **api-security-best-practices** | Validación de Server Actions y sanitización de inputs con Zod. |
-| **database** | Gestión de MongoRepository en la capa de infraestructura del core. |
+La IA debe orquestar sus capacidades basándose en la jerarquía de autoridad definida en `AI/skills/`. Se prohíbe la ejecución de lógica sin la activación previa de la skill correspondiente.
+
+### Jerarquía de Precedencia
+
+1. **CURATED (`AI/skills/curated/`):** Estándares mandatorios y patrones probados en batalla. Es la fuente de verdad absoluta para la arquitectura del hangar.
+2. **COMMUNITY (`AI/skills/community/`):** Extensiones validadas para tecnologías específicas fuera del core.
+
+### Matriz de Habilidades Nucleares
+
+| Skill Name | Ubicación | Cuándo activarla |
+| --- | --- | --- |
+| **senior-architect** | `curated/senior-architect` | Decisiones de estructura, diagramas de flujo y patrones SOLID. |
+| **nextjs-15** | `curated/nextjs-15` | Implementación de App Router, Server Components y optimización de Vercel. |
+| **react-19** | `curated/react-19` | Uso del React Compiler, Server Actions y gestión avanzada de hooks. |
+| **tailwind-4** | `curated/tailwind-4` | Gestión de tokens semánticos en `globals.css` y utilidades de estilo. |
+| **zod-4** | `curated/zod-4` | Validación de esquemas, integridad de datos y blindaje de inputs. |
+| **code-reviewer** | `curated/code-reviewer` | Auditoría de PRs, detección de antipatrones y validación de seguridad. |
+| **api-security** | `curated/api-security-best-practices` | Blindaje de endpoints y sanitización de flujos de datos. |
+| **database** | `curated/database` | Gestión del patrón Repository y persistencia en MongoDB/Mongoose. |
+| **testing** | `curated/playwright` | Protocolos de verificación E2E y estabilidad del sistema. |
+
+---
+
+### Protocolo de Activación de Habilidades
+
+Antes de proponer cualquier cambio técnico, el agente debe:
+
+1. **Escanear:** Identificar si existe una skill en `curated/` que cubra la tarea.
+2. **Declarar:** Utilizar el formato mandatorio: `SKILL ACTIVADA: [Nombre] — [Razón técnica]`.
+3. **Cargar:** Leer el archivo `SKILL.md` correspondiente para alinear los patrones de código con los ejemplos autorizados.
+4. **Priorizar:** Si existe colisión entre una skill de `community/` y una de `curated/`, la versión `curated` tiene precedencia absoluta.
 
 ---
 
