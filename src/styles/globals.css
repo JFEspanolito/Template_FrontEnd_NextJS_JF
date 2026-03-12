@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* ==================================================================
+   Tailwind CSS v4 Theme Tokens
+   Maps CSS custom properties → Tailwind utility classes.
+   Uses --raw-* prefix to avoid circular refs between @theme and :root.
+   ================================================================== */
+
+@theme {
+  /* Background */
+  --body-background: var(--color-background);
+  --card-background: var(--bg-card);
+  --surface-background: var(--bg-surface);
+
+  /* Buttons (--raw-* avoids circular refs) */
+  --btn-primary: var(--raw-btn-primary);
+  --btn-primary-hover: var(--raw-btn-primary-hover);
+  --btn-secondary: var(--raw-btn-secondary);
+  --btn-secondary-hover: var(--raw-btn-secondary-hover);
+  --btn-text-primary: var(--raw-btn-text-primary);
+  --btn-text-secondary: var(--raw-btn-text-secondary);
+  --btn-text-tertiary: var(--raw-btn-text-tertiary);
+
+  /* Text */
+  --foreground-color: var(--color-foreground);
+  --foreground-muted: var(--text-muted);
+  --foreground-disabled: var(--text-disabled);
+
+  /* Borders */
+  --border-dim-one: var(--border-dim);
+  --border-highlight-one: var(--border-highlight);
+
+  /* Highlight / Accent */
+  --highlight-one: var(--highlight-1);
+  --highlight-two: var(--highlight-2);
+
+  /* Shadow */
+  --shadow-soft: var(--raw-shadow-soft);
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Semantic aliases for Tailwind utilities (bg-background, text-foreground) */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+}
+
+/* ==================================================================
+   Custom CSS Variables: light / dark themes.
+   :root = light mode (default) | html.dark = dark mode override.
+   These feed the @theme tokens above.
+   ================================================================== */
+
+:root {
+  /* Background */
+  --color-background: #a8a0a0;
+  --bg-card: #f3f4f6;
+  --bg-surface: #f9fafb;
+
+  /* Buttons */
+  --raw-btn-primary: #d4af37;
+  --raw-btn-primary-hover: #c59b2f;
+  --raw-btn-secondary: #e5e7eb;
+  --raw-btn-secondary-hover: #d1d5db;
+  --raw-btn-text-primary: #0f1113;
+  --raw-btn-text-secondary: #1f2937;
+  --raw-btn-text-tertiary: #1f2937;
+
+  /* Text */
+  --color-foreground: #0a0a0a;
+  --text-muted: #6b7280;
+  --text-disabled: #9ca3af;
+
+  /* Borders */
+  --border-dim: rgba(0, 0, 0, 0.1);
+  --border-highlight: rgba(212, 175, 55, 0.5);
+
+  /* Highlight / Accent */
+  --highlight-1: #d4af37;
+  --highlight-2: #2a6a37;
+
+  /* Shadow */
+  --raw-shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  /* Focus & Overlay */
+  --focus-ring: rgba(212, 175, 55, 0.35);
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  /* Status */
+  --success: #22c55e;
+  --warning: #eab308;
+  --danger: #ef4444;
+  --info: #38bdf8;
+
+  /* Backward-compat aliases (used by existing components) */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --bg-0: var(--color-background);
+  --bg-1: var(--bg-surface);
+  --bg-2: var(--bg-card);
+  --text: var(--color-foreground);
+  --border: var(--border-dim);
+}
+
+html.dark {
+  /* Background */
+  --color-background: #2e2e2e;
+  --bg-card: #1f2529;
+  --bg-surface: #161a1d;
+
+  /* Buttons */
+  --raw-btn-primary: #d4af37;
+  --raw-btn-primary-hover: #c59b2f;
+  --raw-btn-secondary: #2a3136;
+  --raw-btn-secondary-hover: #374047;
+  --raw-btn-text-primary: #e3e6e9;
+  --raw-btn-text-secondary: #e3e6e9;
+  --raw-btn-text-tertiary: #e3e6e9;
+
+  /* Text */
+  --color-foreground: #ededed;
+  --text-muted: #9ba4ac;
+  --text-disabled: #6b7280;
+
+  /* Borders */
+  --border-dim: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(212, 175, 55, 0.5);
+
+  /* Highlight / Accent */
+  --highlight-1: #d4af37;
+  --highlight-2: #2a6a37;
+
+  /* Shadow */
+  --raw-shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.32);
+
+  /* Focus & Overlay */
+  --focus-ring: rgba(212, 175, 55, 0.35);
+  --overlay: rgba(0, 0, 0, 0.8);
+}
+
+/* ==================================================================
+   Global base styles
+   ================================================================== */
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+  font-family: var(--font-geist-sans), sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* ==================================================================
+   Utility classes
+   ================================================================== */
+
+.editorial-title {
+  letter-spacing: -0.03em;
+}
+
+.nav-link {
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+/* Thin scrollbar */
+.stl-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-dim) transparent;
+}
+.stl-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.stl-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.stl-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-dim);
+  border-radius: 99px;
+}
+.stl-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--border-highlight);
+}
+
+/* ==================================================================
+   Spinner (replaces DaisyUI loading)
+   ================================================================== */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  border: 3px solid var(--border-dim);
+  border-top-color: var(--highlight-1);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.spinner-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.spinner-md {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.spinner-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+}

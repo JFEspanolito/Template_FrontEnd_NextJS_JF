@@ -5,8 +5,7 @@ import type { Config } from "tailwindcss";
  *
  * Most configuration now lives in `styles/globals.css`:
  *   - @import "tailwindcss"       → loads the framework
- *   - @plugin "daisyui"           → loads DaisyUI v5
- *   - @theme inline { ... }       → extends design tokens
+ *   - @theme { ... }              → extends design tokens
  *
  * This JS config is kept for backward-compat features that
  * still require it (e.g. darkMode strategy). Content paths
@@ -16,10 +15,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: "class",
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./layout/**/*.{js,ts,jsx,tsx,mdx}",
-    "./sections/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {},
