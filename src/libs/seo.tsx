@@ -1,4 +1,5 @@
 import config from "@/data/configProject";
+import configApi from "@/data/configApi";
 import type { Metadata } from "next";
 
 // ── Tipos ─────────────────────────────────────────────────────────────
@@ -16,7 +17,7 @@ export const getSEOTags = ({ title, description, keywords, canonicalUrlRelative,
   const resolvedOgDescription = config.ogDescription || config.appDescription;
   const resolvedDescription = description || config.appDescription;
 
-  const baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000/" : `https://${config.domainName}/`;
+  const baseUrl = configApi.nextAuth.url;
 
   return {
     title: resolvedTitle,

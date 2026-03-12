@@ -1,4 +1,5 @@
 import axios from "axios";
+import configApi from "@/data/configApi";
 
 interface Message {
   role: "system" | "user" | "assistant";
@@ -22,7 +23,7 @@ export const sendOpenAi = async (
   max: number = 100,
   temp: number = 1
 ): Promise<string | null> => {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = configApi.ai.openai;
   if (!apiKey) {
     console.error("GPT Error: OPENAI_API_KEY is not set");
     return null;

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import configApi from "@/data/configApi";
 
 export const dynamic = "force-dynamic";
 
@@ -9,10 +10,10 @@ export const dynamic = "force-dynamic";
  */
 export async function GET() {
   const status = {
-    google: Boolean(process.env.GOOGLE_ID && process.env.GOOGLE_SECRET),
-    github: Boolean(process.env.GITHUB_ID && process.env.GITHUB_SECRET),
-    linkedin: Boolean(process.env.LINKEDIN_ID && process.env.LINKEDIN_SECRET),
-    facebook: Boolean(process.env.FACEBOOK_ID && process.env.FACEBOOK_SECRET),
+    google: Boolean(configApi.oauth.google.id && configApi.oauth.google.secret),
+    github: Boolean(configApi.oauth.github.id && configApi.oauth.github.secret),
+    linkedin: Boolean(configApi.oauth.linkedin.id && configApi.oauth.linkedin.secret),
+    facebook: Boolean(configApi.oauth.facebook.id && configApi.oauth.facebook.secret),
   };
 
   return NextResponse.json(status, {

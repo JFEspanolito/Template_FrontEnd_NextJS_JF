@@ -5,6 +5,7 @@ import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { btn } from "@/components/buttons/buttonStyles";
+import configApiPublic from "@/data/configApi.public";
 
 declare global {
   interface Window {
@@ -14,8 +15,8 @@ declare global {
   }
 }
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID ?? "";
+const GA_ID = configApiPublic.analytics.googleAnalyticsId;
+const CLARITY_ID = configApiPublic.analytics.clarityId;
 
 function getConsent(): string {
   if (typeof document === "undefined") return "";

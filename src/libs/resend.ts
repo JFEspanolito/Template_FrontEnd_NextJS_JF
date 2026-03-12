@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import config from "@/data/configProject";
+import configApi from "@/data/configApi";
 
 // ── Lazy singleton ───────────────────────────────────────────────────
 // Don't throw at module-level: it would crash the entire app on import
@@ -8,7 +9,7 @@ let _resend: Resend | null = null;
 
 function getResend(): Resend {
   if (!_resend) {
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = configApi.resend.apiKey;
     if (!apiKey) throw new Error("RESEND_API_KEY is not set");
     _resend = new Resend(apiKey);
   }

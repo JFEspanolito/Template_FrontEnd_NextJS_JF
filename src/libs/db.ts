@@ -1,12 +1,13 @@
 import { MongoClient } from "mongodb";
 import mongoose from "mongoose";
+import configApi from "@/data/configApi";
 
 // Declaración global para evitar múltiples conexiones en desarrollo (Hot Reload)
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const uri = process.env.MONGODB_URI;
+const uri = configApi.mongodb.uri;
 
 let clientPromise: Promise<MongoClient> | undefined;
 
@@ -14,7 +15,7 @@ if (uri) {
   const client = new MongoClient(uri);
 
   // Patrón Singleton para Next.js en Desarrollo
-  if (process.env.NODE_ENV === "development") {
+  if (configApi.runtime.isDevelopment) {
     // En desarrollo, guardamos la promesa de conexión en global
     clientPromise =
       global._mongoClientPromise ??

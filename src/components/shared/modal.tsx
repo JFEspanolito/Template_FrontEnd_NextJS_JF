@@ -1,32 +1,24 @@
 "use client";
 
+import { useStore } from "@nanostores/react";
+import { $alertModal, closeAlert } from "@/store/modalStore";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode } from "react";
+import { Fragment } from "react";
 
-interface ModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
-  title?: string;
-  children: ReactNode;
-  preventClose?: boolean;
-}
+const Modal = () => {
+  // Sincronización con la Neurona Global (Nano Store)
+  const { isOpen, title, content, preventClose } = useStore($alertModal);
 
-const Modal: React.FC<ModalProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-  title = "",
-  children,
-  preventClose = false,
-}) => {
   return (
-    <Transition appear show={isModalOpen} as={Fragment}>
+    <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-50"
+        className="relative z-50 font-body"
         onClose={() => {
-          if (!preventClose) setIsModalOpen(false);
+          if (!preventClose) closeAlert();
         }}
       >
+        {/* Overlay: Usamos blur para jerarquía visual Stark */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -36,11 +28,11 @@ const Modal: React.FC<ModalProps> = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/50" />
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" aria-hidden="true" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full overflow-hidden items-start md:items-center justify-center p-2">
+          <div className="flex min-h-full items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -50,11 +42,19 @@ const Modal: React.FC<ModalProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-3xl h-full overflow-visible transform text-left align-middle shadow-xl transition-all rounded-xl bg-[#0f172a] border border-[#393528] p-6 md:p-8">
-                <div className="flex justify-between items-center mb-4">
-                  <Dialog.Title
-                    as="h2"
-                    className="font-semibold text-white text-lg"
+              <Dialog.Panel 
+                className="
+                  relative w-full max-w-2xl transform overflow-hidden 
+                  rounded-2xl border border-[var(--border-dim-one)] 
+                  bg-[var(--card-background)] p-8 shadow-[var(--shadow-soft)] 
+                  transition-all
+                "
+              >
+                {/* Header del Modal */}
+                <div className="flex justify-between items-center mb-6">
+                  <Dialog.Title 
+                    as="h3" 
+                    className="text-2xl font-display font-bold tracking-tight text-[var(--foreground-color)]"
                   >
                     {title}
                   </Dialog.Title>
@@ -62,23 +62,21 @@ const Modal: React.FC<ModalProps> = ({
                   {!preventClose && (
                     <button
                       type="button"
-                      className="text-white hover:text-[var(--highlight-1)] transition-colors p-1"
-                      onClick={() => setIsModalOpen(false)}
+                      className="text-[var(--foreground-muted)] hover:text-[var(--highlight-one)] transition-colors p-2"
+                      onClick={closeAlert}
                       aria-label="Cerrar"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-5 h-5"
-                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-6 h-6">
                         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                       </svg>
                     </button>
                   )}
                 </div>
 
-                <section>{children}</section>
+                {/* Contenido Inyectado */}
+                <div className="text-[var(--foreground-muted)] leading-relaxed">
+                  {content}
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

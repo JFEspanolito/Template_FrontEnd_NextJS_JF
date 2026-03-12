@@ -1,11 +1,9 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import configApiPublic from "@/data/configApi.public";
 
-// Auth callback URL — read from public env var (safe for client bundle).
-// IMPORTANT: configApi.js uses "server-only" and MUST NOT be imported here.
-const AUTH_CALLBACK_URL =
-  process.env.NEXT_PUBLIC_AUTH_CALLBACK_URL || "/dashboard";
+const AUTH_CALLBACK_URL = configApiPublic.auth.callbackUrl;
 
 const apiClient = axios.create({
   baseURL: "/api",

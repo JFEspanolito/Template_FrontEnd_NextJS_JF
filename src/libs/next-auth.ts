@@ -11,6 +11,8 @@ import mongoClientPromise from "./db";
 import User from "@/models/User";
 import configProject from "@/data/configProject";
 
+const authLogoUrl = new URL("/logoAndName.webp", configApi.nextAuth.url).toString();
+
 interface GoogleProfile extends Profile {
   sub: string;
   given_name?: string;
@@ -18,17 +20,17 @@ interface GoogleProfile extends Profile {
 }
 
 // Read env vars once and conditionally add providers
-const GOOGLE_ID = process.env.GOOGLE_ID;
-const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
-const GITHUB_ID = process.env.GITHUB_ID;
-const GITHUB_SECRET = process.env.GITHUB_SECRET;
-const LINKEDIN_ID = process.env.LINKEDIN_ID;
-const LINKEDIN_SECRET = process.env.LINKEDIN_SECRET;
-const FACEBOOK_ID = process.env.FACEBOOK_ID;
-const FACEBOOK_SECRET = process.env.FACEBOOK_SECRET;
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || "";
-const MONGODB_URI = process.env.MONGODB_URI;
+const GOOGLE_ID = configApi.oauth.google.id;
+const GOOGLE_SECRET = configApi.oauth.google.secret;
+const GITHUB_ID = configApi.oauth.github.id;
+const GITHUB_SECRET = configApi.oauth.github.secret;
+const LINKEDIN_ID = configApi.oauth.linkedin.id;
+const LINKEDIN_SECRET = configApi.oauth.linkedin.secret;
+const FACEBOOK_ID = configApi.oauth.facebook.id;
+const FACEBOOK_SECRET = configApi.oauth.facebook.secret;
+const RESEND_API_KEY = configApi.resend.apiKey;
+const NEXTAUTH_SECRET = configApi.nextAuth.secret;
+const MONGODB_URI = configApi.mongodb.uri;
 
 const providers: Provider[] = [];
 
@@ -89,7 +91,7 @@ if (MONGODB_URI && RESEND_API_KEY) {
           pass: RESEND_API_KEY,
         },
       },
-      from: configApi.resend.fromNoReply,
+      from: configProject.resend.fromNoReply,
     }),
   );
 }
@@ -97,14 +99,12 @@ if (MONGODB_URI && RESEND_API_KEY) {
 export const authOptions: NextAuthOptions = {
   secret: NEXTAUTH_SECRET,
   providers,
-  ...(MONGODB_URI && mongoClientPromise
-    ? { adapter: MongoDBAdapter(mongoClientPromise) }
-    : {}),
+  ...(MONGODB_URI && mongoClientPromise ? { adapter: MongoDBAdapter(mongoClientPromise) } : {}),
 
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.role = (user as { role?: string }).role as typeof token.role ?? "user";
+        token.role = ((user as { role?: string }).role as typeof token.role) ?? "user";
       }
 
       if (trigger === "update" && session?.user) {
@@ -136,10 +136,7 @@ export const authOptions: NextAuthOptions = {
   },
   theme: {
     brandColor: configProject.colors.main,
-    logo:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000/logoAndName.webp"
-        : `https://${configProject.domainName}/logoAndName.webp`,
+    logo: authLogoUrl,
   },
 };
 

@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import configApi from "@/data/configApi";
 
 // ── Stripe Singleton ─────────────────────────────────────────────────
 // Never instantiate Stripe per-request; reuse a module-level instance.
@@ -6,7 +7,7 @@ let _stripe: Stripe | null = null;
 
 function getStripe(): Stripe {
   if (!_stripe) {
-    const key = process.env.STRIPE_SECRET_KEY;
+    const key = configApi.stripe.secretKey;
     if (!key) throw new Error("Missing STRIPE_SECRET_KEY env var");
     _stripe = new Stripe(key);
   }
