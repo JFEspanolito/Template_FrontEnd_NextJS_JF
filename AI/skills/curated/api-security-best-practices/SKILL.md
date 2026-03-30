@@ -1,6 +1,10 @@
 ---
 name: api-security-best-practices
 description: "Implement secure API design patterns including authentication, authorization, input validation, rate limiting, and protection against common API vulnerabilities"
+metadata:
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 # API Security Best Practices

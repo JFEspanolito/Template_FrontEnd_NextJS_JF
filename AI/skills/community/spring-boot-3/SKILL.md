@@ -5,7 +5,9 @@ description: >
   Trigger: When building or refactoring Spring Boot 3 applications.
 metadata:
   author: diegnghrmr
-  version: "1.0"
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 ## When to Use

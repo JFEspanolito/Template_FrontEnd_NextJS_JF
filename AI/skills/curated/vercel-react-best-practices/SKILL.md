@@ -5,6 +5,8 @@ license: MIT
 metadata:
   author: vercel
   version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 # Vercel React Best Practices

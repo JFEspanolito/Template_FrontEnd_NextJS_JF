@@ -5,7 +5,9 @@ description: >
   Trigger: When creating PRs, writing PR descriptions, or using gh CLI for pull requests.
 metadata:
   author: gentleman-programming
-  version: "1.0"
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 ## When to Use

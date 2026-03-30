@@ -6,7 +6,11 @@ description: >
 license: Apache-2.0
 metadata:
   author: gentleman-programming
-  version: "1.1"
+  version: "1.1.0"
+  last-updated: "2026-03"
+  compatible-with:
+    - "tailwindcss@4"
+  deprecated: false
 ---
 
 ## Styling Decision Tree

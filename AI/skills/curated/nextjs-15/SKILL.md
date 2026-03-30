@@ -6,7 +6,11 @@ description: >
 license: Apache-2.0
 metadata:
   author: gentleman-programming
-  version: "1.0"
+  version: "1.0.0"
+  last-updated: "2026-03"
+  compatible-with:
+    - "next@15"
+  deprecated: false
 ---
 
 ## App Router File Conventions
