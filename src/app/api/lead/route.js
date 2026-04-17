@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectMongo } from "@/libs/db";
-import Lead from "@/models/Lead";
 
 export async function POST(req) {
-  await connectMongo();
-
   const body = await req.json();
 
   if (!body.email) {
@@ -12,20 +8,13 @@ export async function POST(req) {
   }
 
   try {
-    // Here you can add your own logic
-    // For instance, sending a welcome email (use the the sendEmail helper function from /libs/resend)
-    // For instance, saving the lead in the database (uncomment the code below)
-
-    // const lead = await Lead.findOne({ email: body.email });
-
-    // if (!lead) {
-    // 	await Lead.create({ email: body.email });
-    // }
+    // Add your own logic here:
+    // - Send a welcome email via /libs/resend
+    // - Save the lead to your Supabase `leads` table
 
     return NextResponse.json({});
   } catch (e) {
     console.error(e?.message || String(e));
-    // Never expose internal error messages to the client
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

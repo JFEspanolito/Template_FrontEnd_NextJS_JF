@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { btn } from "@/components/buttons/buttonStyles";
+import { createClient } from "@/libs/supabase/client";
+
+type OAuthProvider = "google" | "github" | "linkedin" | "facebook";
 
 type Props = {
   open?: boolean;
@@ -16,7 +18,6 @@ export function SignInForm({ open = true, onClose }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
 
-  // Email/password (template mode)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailBusy, setEmailBusy] = useState(false);
@@ -25,60 +26,25 @@ export function SignInForm({ open = true, onClose }: Props) {
 
   if (!open) return null;
 
-  const handleProviderSignIn = async (providerId: string) => {
+  const handleProviderSignIn = async (provider: OAuthProvider) => {
     setMessage(null);
+    const supabase = createClient();
 
     try {
-      // Step 1: Check if provider is configured on server
-      const statusRes = await fetch("/api/auth/providers-status", {
-        cache: "no-store",
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
 
-      if (!statusRes.ok) {
-        console.error("[DEV] Failed to fetch provider status");
-        toast.error(t("errorVerifyingConfig"), {
-          duration: 3000,
-          position: "bottom-center",
-        });
-        return;
-      }
-
-      const providerStatus = await statusRes.json();
-
-      // Step 2: Gate-check: if provider not configured, show message and stop
-      if (!providerStatus[providerId]) {
-        console.warn(
-          `[DEV] Provider "${providerId}" is NOT configured. Missing ${providerId.toUpperCase()}_ID or ${providerId.toUpperCase()}_SECRET`
-        );
-        setIsErrorMessage(true);
-        setMessage(t("providerNotAvailable"));
-        return;
-      }
-
-      // Step 3: Provider is configured, proceed with signIn
-      const result = await signIn(providerId, {
-        callbackUrl: "/dashboard",
-        redirect: false,
-      });
-
-      if (result?.error || !result?.ok) {
-        console.error(`[DEV] OAuth Error (${providerId}):`, String(result?.error || "Authentication failed"));
-        toast.error(t("errorSigningIn"), {
-          duration: 3000,
-          position: "bottom-center",
-        });
-        return;
-      }
-
-      if (result?.ok && result?.url) {
-        window.location.href = result.url;
+      if (error) {
+        console.error(`[DEV] OAuth Error (${provider}):`, error.message);
+        toast.error(t("errorSigningIn"), { duration: 3000, position: "bottom-center" });
       }
     } catch (error) {
-      console.error(`[DEV] Sign-in exception (${providerId}):`, (error as any)?.message || String(error));
-      toast.error(t("errorSigningIn"), {
-        duration: 3000,
-        position: "bottom-center",
-      });
+      console.error(`[DEV] Sign-in exception (${provider}):`, (error as Error)?.message || String(error));
+      toast.error(t("errorSigningIn"), { duration: 3000, position: "bottom-center" });
     }
   };
 
@@ -108,12 +74,25 @@ export function SignInForm({ open = true, onClose }: Props) {
     }
 
     setEmailBusy(true);
+    const supabase = createClient();
+
     try {
-      // Template-only behavior (no DB, no real auth)
-      await new Promise((r) => setTimeout(r, 400));
-      setMessage(`${t("emailPasswordTemplateMode")} ${email.trim()}`);
-      // Optionally close modal on "success"
-      // onClose?.();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) {
+        setIsErrorMessage(true);
+        setMessage(error.message);
+        return;
+      }
+
+      onClose?.();
+      window.location.href = "/dashboard";
+    } catch (error) {
+      setIsErrorMessage(true);
+      setMessage(t("errorSigningIn"));
     } finally {
       setEmailBusy(false);
     }
@@ -197,13 +176,20 @@ export function SignInForm({ open = true, onClose }: Props) {
 
           {/* Social providers */}
           <div className="flex flex-col gap-3">
-            {[
-              { id: "google", name: "Google" },
-              { id: "github", name: "GitHub" },
-              { id: "linkedin", name: "LinkedIn" },
-              { id: "facebook", name: "Facebook" },
-            ].map((p) => (
-              <button key={p.id} className={`${btn("outline")} w-full`} onClick={() => handleProviderSignIn(p.id)} type="button">
+            {(
+              [
+                { id: "google", name: "Google" },
+                { id: "github", name: "GitHub" },
+                { id: "linkedin", name: "LinkedIn" },
+                { id: "facebook", name: "Facebook" },
+              ] as { id: OAuthProvider; name: string }[]
+            ).map((p) => (
+              <button
+                key={p.id}
+                className={`${btn("outline")} w-full`}
+                onClick={() => handleProviderSignIn(p.id)}
+                type="button"
+              >
                 {t("continueWith")} {p.name}
               </button>
             ))}
@@ -212,7 +198,9 @@ export function SignInForm({ open = true, onClose }: Props) {
           {message && (
             <div
               className={`text-sm pt-2 px-3 py-2 rounded-md ${
-                emailError || passwordError || isErrorMessage ? "bg-red-500/10 text-white-500 border border-red-500/20" : "text-[var(--text-muted)]"
+                emailError || passwordError || isErrorMessage
+                  ? "bg-red-500/10 text-white-500 border border-red-500/20"
+                  : "text-[var(--text-muted)]"
               }`}
             >
               {message}

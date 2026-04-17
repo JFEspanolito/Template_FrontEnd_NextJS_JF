@@ -1,39 +1,35 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/libs/next-auth";
-import User from "@/models/User";
-import { connectMongo } from "@/libs/db";
+import { createClient } from "@/libs/supabase/server";
+import { getSupabaseAdmin } from "@/libs/supabase/admin";
 
-// Force dynamic to avoid caching
 export const dynamic = "force-dynamic";
 
-// This route is used to get data for the admin dashboard
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "admin") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await connectMongo();
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1 });
+    if (error) throw error;
 
-    // Get all users count
-    const usersCount = await User.countDocuments();
-    const stats = {
-      usersCount,
-    };
-
-    return NextResponse.json({ data: stats });
+    return NextResponse.json({ data: { usersCount: data.total ?? 0 } });
   } catch (error) {
     console.error("Error fetching dashboard data:", error?.message || String(error));
-    return NextResponse.json(
-      { error: "Error fetching dashboard data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error fetching dashboard data" }, { status: 500 });
   }
 }

@@ -10,8 +10,8 @@ type User = {
 };
 
 /**
- * Placeholder: reemplazar por llamada real a la base de datos.
- * Ejemplo: usar libs/mongo.ts, fetch a /api/admin/users o una query a mongoose.
+ * Placeholder: reemplazar por llamada real a Supabase.
+ * Ejemplo: fetch a /api/admin/users o usar el server client de @/libs/supabase/server.
  */
 async function getUsers(): Promise<User[]> {
 	return []; // template vacío
