@@ -144,5 +144,5 @@ El sistema incluye scripts en `/scripts` para la optimización automática de ac
 - Generar árbol de directorios (Windows):
 ```
 winget install GerdHoffmann.Tree
-& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next|dist|build|.astro|.next|.vscode|.agent' > tree.txt
+& "C:\Program Files (x86)\GnuWin32\bin\tree.exe" -I 'node_modules|.next|dist|build|.astro|.vscode|.agent|agents|rules|skills' > tree.txt
 ```

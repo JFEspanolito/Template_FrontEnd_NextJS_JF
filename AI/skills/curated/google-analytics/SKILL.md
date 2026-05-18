@@ -1,6 +1,10 @@
 ---
 name: google-analytics
 description: Analyze Google Analytics data, review website performance metrics, identify traffic patterns, and suggest data-driven improvements. Use when the user asks about analytics, website metrics, traffic analysis, conversion rates, user behavior, or performance optimization.
+metadata:
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 # Google Analytics Analysis

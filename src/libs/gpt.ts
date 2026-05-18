@@ -1,4 +1,3 @@
-import axios from "axios";
 import configApi from "@/data/configApi";
 
 interface Message {
@@ -29,29 +28,32 @@ export const sendOpenAi = async (
     return null;
   }
 
-  const url = "https://api.openai.com/v1/chat/completions";
-
-  const body = JSON.stringify({
-    model: "gpt-4",
-    messages,
-    max_tokens: max,
-    temperature: temp,
-    user: userId,
-  });
-
-  const options = {
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-  };
-
   try {
-    const res = await axios.post<OpenAiResponse>(url, body, options);
-    return res.data.choices[0].message.content;
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages,
+        max_tokens: max,
+        temperature: temp,
+        user: userId,
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("GPT Error:", res.status, res.statusText);
+      return null;
+    }
+
+    const data: OpenAiResponse = await res.json();
+    return data.choices[0].message.content;
   } catch (e: unknown) {
-    const err = e as { response?: { status?: number }; message?: string };
-    console.error("GPT Error:", err.response?.status, err.message || String(e));
+    const err = e as { message?: string };
+    console.error("GPT Error:", err.message || String(e));
     return null;
   }
 };

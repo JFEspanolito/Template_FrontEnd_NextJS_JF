@@ -1,65 +1,63 @@
-# AI/rules/DESIGN_SYSTEM.md: PROTOCOLO OMEGA (NEXT.JS)
+# DESIGN SYSTEM: The Visual Firewall
 
 ## 1. EL PROBLEMA: Inconsistencia y Hex-Hardcoding
 
-Poner un `#FF5733` directamente en un componente es un pecado capital. En esta arquitectura, si un valor no es una variable, no existe para el sistema. El objetivo es que cualquier cambio de marca se realice en un único punto de verdad: `src/styles/globals.css`.
+Poner un `#FF5733` directamente en un componente es un pecado capital. Si mañana el cliente decide que el "Naranja Vibrante" ahora es "Azul Corporativo", no voy a permitirte hacer un `Search & Replace` en 40 archivos.
 
-**Regla de Oro:** Prohibido el uso de valores crudos (Hex/RGBA/Arbitrary values) en las clases de Tailwind o estilos inline.
+**Regla de Oro:** Si no es una variable, no existe.
 
 ---
 
-## 2. DESIGN TOKENS (Capa Semántica)
+## 2. DESIGN TOKENS (Variables de Verdad)
 
 ### Paleta de Colores
 
-Cualquier color debe referenciar a un token semántico. No usamos nombres de colores, usamos nombres funcionales.
+Cualquier color usado debe referenciar a un token semántico. No usamos "Azul", usamos "Primary".
 
-| Categoría | Token | Uso |
-| --- | --- | --- |
-| **Brand** | `--accent-one` | Acciones principales, botones primarios. |
-| **Brand** | `--accent-two` | Elementos de resalte y estados activos. |
-| **Neutral** | `--body-background` | Fondo base de la aplicación. |
-| **Neutral** | `--foreground-base` | Color base de la tipografía. |
-| **Status** | `--raw-text-highlight` | Alertas y validaciones. |
+| Categoría | Token | Valor (Editable) | Uso |
+| --- | --- | --- | --- |
+| **Brand** | `--color-primary` | `[#COLOR_HEX]` | Acciones principales, botones, enlaces. |
+| **Brand** | `--color-secondary` | `[#COLOR_HEX]` | Elementos de acento. |
+| **Neutral** | `--color-bg` | `[#COLOR_HEX]` | Fondo de la aplicación. |
+| **Neutral** | `--color-text` | `[#COLOR_HEX]` | Color base de la tipografía. |
+| **Status** | `--color-error` | `[#COLOR_HEX]` | Alertas, validaciones fallidas. |
 
-### Tipografía y Escala
+### Tipografía & Escala
 
-La escala tipográfica es modular. Se prohíbe inventar tamaños intermedios.
+Usamos una escala modular para evitar que cada desarrollador invente un tamaño de fuente nuevo.
 
-* **Fuentes:** Definidas mediante `next/font` en el Layout Raíz.
-* Display: `Syne` (variables `--font-display`).
-* Body: `Space Grotesk` (variables `--font-body`).
-
-
-* **Escala:** Usamos `rem` para garantizar la accesibilidad.
-* **Layout:** Los contenedores siguen la fórmula:
-
-$$\text{Container Width} = \min(100\% - 2 \cdot \text{padding}, \text{max-width})$$
+* **Base:** `16px` (1rem).
+* **Scale:** `1.25` (Major Third).
+* **Tokens:** `--text-sm`, `--text-base`, `--text-lg`, `--text-xl`, `--text-2xl`.
 
 ---
 
-## 3. ESTÁNDARES DE IMPLEMENTACIÓN (NEXT.JS)
+## 3. ESTÁNDARES DE IMPLEMENTACIÓN
 
-### Optimización de Assets (Mandatorio)
+### Prohibiciones Estrictas (The "No-Fly" Zone)
 
-Para cumplir con los estándares de rendimiento de Vercel, la IA debe seguir estas reglas:
+* **NO Inline Styles:** El atributo `style=""` está vetado salvo para cálculos dinámicos de JS (ej. posiciones de animaciones).
+* **NO Magic Numbers:** Márgenes como `margin: 13px` son ilegales. Usa la escala de espaciado: `--spacing-1` (4px), `--spacing-2` (8px), etc.
+* **NO Unscaled Units:** Siempre usa `rem` para accesibilidad. `px` solo para bordes de 1 o 2px.
 
-1. **Imágenes:** Queda prohibido el uso de la etiqueta `<img>`. Es obligatorio el uso de `next/image` con las propiedades `placeholder="blur"` y formatos `WebP/AVIF`.
-2. **Fuentes:** No se permiten importaciones de Google Fonts mediante CSS o etiquetas `<link>`. Se debe usar `next/font/google` dentro de `src/app/layout.tsx`.
-3. **Scripts:** Lógicas de terceros (Analytics, Scripts externos) deben usar `next/script` con la estrategia de carga adecuada (`afterInteractive` o `lazyOnload`).
+### Unidades y Medidas
 
-### Capa de Temas (Dual Abstraction)
+Para cálculos de layout complejos, usa CSS moderno:
 
-El sistema utiliza una arquitectura de variables de dos niveles en `src/styles/globals.css`:
-
-* **Capa de Valores (--raw-*):** Define los Hex/RGBA crudos en `:root` y `html.dark`.
-* **Capa Semántica (--*):** Mapea los valores crudos a nombres funcionales dentro del bloque `@theme`.
+```
+Container Width = min(100% − 2·padding, max-width)
+```
 
 ---
 
-## 4. CONFIGURACIÓN DEL MOTOR (CSS)
+## 4. ARQUITECTURA DE TEMAS: Capa Dual de Abstracción
 
-El agente debe seguir esta estructura en `src/styles/globals.css`. Se prohíbe la modificación de este bloque sin validación del Arquitecto.
+Nuestra arquitectura visual se divide en dos capas para garantizar que el cambio de tema sea instantáneo y libre de errores circulares.
+
+* **Capa de Valores (`--raw-*`):** Definida en `:root` y `html.dark`. Contiene los valores crudos (Hex/RGBA).
+* **Capa Semántica (`@theme`):** Mapea los valores crudos a nombres funcionales que Tailwind reconoce automáticamente.
+
+**Directriz de Escalabilidad:** Si un elemento requiere un ajuste, propone un nuevo token semántico en lugar de aplicar un estilo local.
 
 ```css
 @theme {
@@ -67,7 +65,7 @@ El agente debe seguir esta estructura en `src/styles/globals.css`. Se prohíbe l
   --body-background: var(--raw-color-background);
   --card-background: var(--raw-bg-card);
 
-  /* Interactive Components */
+  /* Buttons */
   --btn-primary: var(--raw-btn-primary);
   --btn-secondary: var(--raw-btn-secondary);
   --btn-text-primary: var(--raw-btn-text-primary);
@@ -84,17 +82,75 @@ El agente debe seguir esta estructura en `src/styles/globals.css`. Se prohíbe l
 
   /* Shadows */
   --shadow-soft: var(--raw-shadow-soft);
+
+  /* Fonts */
+  --font-display: "Syne", "sans-serif";
+  --font-body: "Space Grotesk", "sans-serif";
 }
 
+/* --- LIGHT MODE --- */
+:root {
+  --raw-color-background: #6a6e72;
+  --raw-color-foreground: #111111;
+  --raw-bg-card: #f4f4f5;
+
+  --raw-btn-primary: #ffffff;
+  --raw-btn-text-primary: #111111;
+  --raw-btn-secondary: rgba(0, 0, 0, 0.06);
+  --raw-btn-text-secondary: #1c2c42;
+
+  --raw-text-muted: #010305;
+  --raw-text-highlight: #a3e635;
+  --raw-highlight-1: #2294f2;
+  --raw-highlight-2: #ffcd03;
+
+  --raw-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* --- DARK MODE --- */
+html.dark {
+  --raw-color-background: #111111;
+  --raw-color-foreground: #e2e8f0;
+  --raw-bg-card: #18181b;
+
+  --raw-btn-primary: #27272a;
+  --raw-btn-text-primary: #e2e8f0;
+  --raw-btn-secondary: rgba(255, 255, 255, 0.06);
+  --raw-btn-text-secondary: #94a3b8;
+
+  --raw-text-muted: #94a3b8;
+  --raw-text-highlight: #a3e635;
+  --raw-highlight-1: #2294f2;
+  --raw-highlight-2: #ffcd03;
+
+  --raw-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
 ```
 
 ---
 
-## 5. JARVIS PROTOCOL: Verificación de UI (Omega)
+## 5. COMPONENTES ATÓMICOS
 
-Antes de dar por finalizada una tarea de frontend en Next.js, la IA debe verificar:
+Tratamos la UI como piezas de LEGO, no como bloques de mármol.
 
-1. **Frontera RSC/Client:** ¿El componente usa hooks? Si no, ¿se eliminó `"use client"`?
-2. **CLS (Cumulative Layout Shift):** ¿Las imágenes tienen dimensiones `width` y `height` definidas en `next/image`?
-3. **Hydration Match:** ¿El `ThemeProvider` de cliente está envolviendo correctamente el `{children}` en el servidor para evitar el parpadeo de estilos?
-4. **Tokens Check:** ¿Se usaron utilidades de Tailwind que apunten a los tokens del `@theme` (ej. `bg-card-background`)?
+1. **Atom:** Botones, Inputs, Badges (Sin lógica de negocio).
+2. **Molecule:** Card de producto, SearchBar (Lógica UI mínima).
+3. **Organism:** Navbar, Footer, Formulario de Registro (Conexión con datos).
+
+---
+
+## 6. JARVIS PROTOCOL: Verificación de UI
+
+Si eres una IA trabajando en este repo, antes de enviar un cambio de frontend:
+
+1. **Inspección de Variables:** ¿Este color está definido como token en `:root` o en `@theme`? Si no, cámbialo.
+2. **Responsividad:** ¿Usaste clases de layout (`flex`, `grid`) o forzaste posiciones con `absolute`? Solo acepto lo primero.
+3. **Accesibilidad:** ¿El contraste cumple con el estándar WCAG? Si el texto no es legible, el diseño es basura.
+
+---
+
+## 7. Herramientas Sugeridas (Tooling)
+
+* **Linter:** `eslint-plugin-tailwindcss` para evitar clases arbitrarias.
+* **Inspector:** Usa `eza` para verificar la estructura de assets en `/public`.
+* **Visualización:** `bat` para revisar los archivos de temas de CSS rápidamente.

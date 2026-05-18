@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { createServerClient } from "@supabase/ssr";
 
 /**
  * Protects private routes (/dashboard/*, /admin/*).
@@ -8,23 +8,49 @@ import { getToken } from "next-auth/jwt";
  * Redirects non-admin users away from /admin/* routes.
  */
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req });
+  const res = NextResponse.next();
 
-  // Not signed in → redirect to NextAuth sign-in page
-  if (!token) {
-    const signInUrl = new URL("/api/auth/signin", req.url);
-    signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            req.cookies.set(name, value);
+            res.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    const signInUrl = new URL("/signin", req.url);
+    signInUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
     return NextResponse.redirect(signInUrl);
   }
 
-  // Admin routes require "admin" role
   if (req.nextUrl.pathname.startsWith("/admin")) {
-    if (token.role !== "admin") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   }
 
-  return NextResponse.next();
+  return res;
 }
 
 export const config = {

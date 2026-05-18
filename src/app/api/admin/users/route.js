@@ -1,125 +1,128 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/libs/next-auth";
-import { connectMongo } from "@/libs/db";
-import User from "@/models/User";
+import { createClient } from "@/libs/supabase/server";
+import { getSupabaseAdmin } from "@/libs/supabase/admin";
 
-// Prevent caching
+// Requires a `profiles` table in Supabase:
+// id uuid references auth.users(id), role text default 'user',
+// name text, customer_id text, price_id text, has_access boolean default false
+
 export const dynamic = "force-dynamic";
+
+async function getAdminUser() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return null;
+  return user;
+}
 
 // GET /api/admin/users
 export async function GET(req) {
   try {
-    console.info("🔍 Fetching users...");
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user || session.user.role !== "admin") {
-      console.info("❌ Unauthorized access attempt");
+    const adminUser = await getAdminUser();
+    if (!adminUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await connectMongo();
-    console.info("📡 MongoDB connected");
-
-    // Get URL parameters
     const { searchParams } = new URL(req.url);
     const page = Math.max(1, parseInt(searchParams.get("page")) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit")) || 10));
     const search = searchParams.get("search");
 
-    // Build query — escape user input to prevent ReDoS attacks
-    const query = {};
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: limit });
+    if (error) throw error;
+
+    let users = data.users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      createdAt: u.created_at,
+    }));
+
     if (search) {
-      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      query.$or = [
-        { name: { $regex: escaped, $options: "i" } },
-        { email: { $regex: escaped, $options: "i" } },
-      ];
+      const q = search.toLowerCase();
+      users = users.filter((u) => u.email?.toLowerCase().includes(q));
     }
 
-    // Execute query with pagination
-    const skip = (page - 1) * limit;
-    const users = await User.find(query)
-      .select("name email role createdAt lastLogin")
-      .sort("-createdAt")
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    const ids = users.map((u) => u.id);
+    const { data: profiles } = await admin
+      .from("profiles")
+      .select("id, name, role")
+      .in("id", ids);
 
-    const total = await User.countDocuments(query);
+    const profileMap = Object.fromEntries((profiles ?? []).map((p) => [p.id, p]));
 
-    console.info(`✅ Found ${users.length} users`);
+    const enriched = users.map((u) => ({
+      ...u,
+      name: profileMap[u.id]?.name ?? null,
+      role: profileMap[u.id]?.role ?? "user",
+    }));
+
     return NextResponse.json({
-      data: users,
+      data: enriched,
       pagination: {
-        total,
+        total: data.total ?? enriched.length,
         page,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil((data.total ?? enriched.length) / limit),
       },
     });
   } catch (error) {
-    console.error("❌ Error fetching users:", error?.message || String(error));
-    return NextResponse.json(
-      { error: "Error fetching users" },
-      { status: 500 }
-    );
+    console.error("Error fetching users:", error?.message || String(error));
+    return NextResponse.json({ error: "Error fetching users" }, { status: 500 });
   }
 }
 
 // POST /api/admin/users
 export async function POST(req) {
   try {
-    console.info("📝 Creating new user...");
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user || session.user.role !== "admin") {
-      console.info("❌ Unauthorized access attempt");
+    const adminUser = await getAdminUser();
+    if (!adminUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
     const { name, email, role } = body;
 
-    // Basic validations
     if (!name || !email) {
-      console.info("❌ Missing required fields");
-      return NextResponse.json(
-        { error: "Name and email are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
     }
 
-    // Validate role
     const validRoles = ["user", "admin", "editor", "moderator"];
     if (role && !validRoles.includes(role)) {
-      console.info("❌ Invalid role:", role);
       return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
-    await connectMongo();
-    console.info("📡 MongoDB connected");
+    const admin = getSupabaseAdmin();
+    const { data: created, error: createError } = await admin.auth.admin.createUser({
+      email,
+      email_confirm: true,
+    });
 
-    // Check if email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      console.info("❌ Email already exists:", email);
-      return NextResponse.json(
-        { error: "Email already registered" },
-        { status: 400 }
-      );
+    if (createError) {
+      if (createError.message.includes("already")) {
+        return NextResponse.json({ error: "Email already registered" }, { status: 400 });
+      }
+      throw createError;
     }
 
-    // Create user
-    const user = await User.create({
+    const { error: profileError } = await admin.from("profiles").insert({
+      id: created.user.id,
       name,
-      email,
       role: role || "user",
     });
 
-    console.info("✅ User created successfully:", user._id);
-    return NextResponse.json({ data: user });
+    if (profileError) throw profileError;
+
+    return NextResponse.json({ data: { id: created.user.id, email, name, role: role || "user" } });
   } catch (error) {
-    console.error("❌ Error creating user:", error?.message || String(error));
+    console.error("Error creating user:", error?.message || String(error));
     return NextResponse.json({ error: "Error creating user" }, { status: 500 });
   }
 }

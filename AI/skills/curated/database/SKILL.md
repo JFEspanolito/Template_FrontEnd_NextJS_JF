@@ -7,6 +7,10 @@ license: MIT
 tags: [Railway, Database, Postgres, Redis, MySQL, MongoDB, Infrastructure, Deployment, Template]
 dependencies: [railway-cli]
 allowed-tools: Bash(railway:*)
+metadata:
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 # Railway Database

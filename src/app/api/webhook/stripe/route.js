@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import { connectMongo } from "@/libs/db";
-import User from "@/models/User";
+import { getSupabaseAdmin } from "@/libs/supabase/admin";
 import { findCheckoutSession } from "@/libs/stripe";
+
+// Requires a `profiles` table in Supabase:
+// id uuid references auth.users(id), customer_id text, price_id text, has_access boolean
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// Singleton — avoid creating a new instance per request
 let _stripe;
 function getStripe() {
   if (!_stripe) {
@@ -19,8 +20,6 @@ function getStripe() {
 }
 
 export async function POST(req) {
-  await connectMongo();
-
   let stripe;
   try {
     stripe = getStripe();
@@ -30,8 +29,6 @@ export async function POST(req) {
   }
 
   const body = await req.text();
-
-  // Next.js 15+: headers() is async and must be awaited
   const headersList = await headers();
   const signature = headersList.get("stripe-signature");
 
@@ -39,7 +36,6 @@ export async function POST(req) {
   let eventType;
   let event;
 
-  // Verify Stripe event is legit
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
@@ -51,6 +47,8 @@ export async function POST(req) {
   eventType = event.type;
 
   try {
+    const admin = getSupabaseAdmin();
+
     switch (eventType) {
       case "checkout.session.completed": {
         const session = await findCheckoutSession(data.object.id);
@@ -59,7 +57,6 @@ export async function POST(req) {
         const priceId = session?.line_items?.data[0]?.price?.id;
         const userId = data.object.client_reference_id;
 
-        // Skip if we couldn't resolve a priceId
         if (!priceId) {
           console.warn("checkout.session.completed: no priceId found, skipping.");
           break;
@@ -67,98 +64,83 @@ export async function POST(req) {
 
         const customer = await stripe.customers.retrieve(customerId);
 
-        let user;
+        let profileId;
 
-        // Get or create the user. userId is normally passed in the checkout session
-        // (clientReferenceID) to identify the user when we get the webhook event
         if (userId) {
-          user = await User.findById(userId);
+          profileId = userId;
         } else if (customer.email) {
-          user = await User.findOne({ email: customer.email });
+          const { data: existing } = await admin
+            .from("profiles")
+            .select("id")
+            .eq("email", customer.email)
+            .single();
 
-          if (!user) {
-            user = await User.create({
+          if (existing) {
+            profileId = existing.id;
+          } else {
+            const { data: created, error } = await admin.auth.admin.createUser({
               email: customer.email,
-              name: customer.name,
+              email_confirm: true,
+              user_metadata: { name: customer.name },
             });
+            if (error) throw error;
+            profileId = created.user.id;
 
-            await user.save();
+            await admin.from("profiles").insert({ id: profileId, name: customer.name });
           }
         } else {
-          console.error("No user found");
           throw new Error("No user found");
         }
 
-        // Update user data + Grant user access to your product
-        user.priceId = priceId;
-        user.customerId = customerId;
-        user.hasAccess = true;
-        await user.save();
-
-        // Extra: send email with user link, product page, etc...
-        // try {
-        //   await sendEmail({to: ...});
-        // } catch (e) {
-        //   console.error("Email issue:" + e?.message);
-        // }
+        await admin
+          .from("profiles")
+          .update({ price_id: priceId, customer_id: customerId, has_access: true })
+          .eq("id", profileId);
 
         break;
       }
 
-      case "checkout.session.expired": {
-        // User didn't complete the transaction
+      case "checkout.session.expired":
         break;
-      }
 
-      case "customer.subscription.updated": {
-        // The customer might have changed the plan (higher or lower plan, cancel soon etc...)
-        // Stripe will let us know when cancelled for good in "customer.subscription.deleted"
+      case "customer.subscription.updated":
         break;
-      }
 
       case "customer.subscription.deleted": {
-        // The customer subscription stopped — revoke access
-        const subscription = await stripe.subscriptions.retrieve(
-          data.object.id
-        );
-        const user = await User.findOne({ customerId: subscription.customer });
+        const subscription = await stripe.subscriptions.retrieve(data.object.id);
 
-        if (user) {
-          user.hasAccess = false;
-          await user.save();
-        }
+        await admin
+          .from("profiles")
+          .update({ has_access: false })
+          .eq("customer_id", subscription.customer);
 
         break;
       }
 
       case "invoice.paid": {
-        // Customer just paid an invoice (e.g. recurring subscription payment)
         const priceId = data.object.lines?.data?.[0]?.price?.id;
         const customerId = data.object.customer;
 
-        const user = await User.findOne({ customerId });
+        const { data: profile } = await admin
+          .from("profiles")
+          .select("id, price_id")
+          .eq("customer_id", customerId)
+          .single();
 
-        // Make sure the invoice is for the same plan the user subscribed to
-        if (!user || user.priceId !== priceId) break;
+        if (!profile || profile.price_id !== priceId) break;
 
-        user.hasAccess = true;
-        await user.save();
+        await admin.from("profiles").update({ has_access: true }).eq("id", profile.id);
 
         break;
       }
 
       case "invoice.payment_failed":
-        // A payment failed — Stripe Smart Retries will handle automatic emails.
-        // We'll revoke access in "customer.subscription.deleted" if retries fail.
         break;
 
       default:
-      // Unhandled event type
     }
   } catch (e) {
-    console.error(
-      "stripe error: " + (e?.message || String(e)) + " | EVENT TYPE: " + eventType
-    );
+    console.error("stripe error: " + (e?.message || String(e)) + " | EVENT TYPE: " + eventType);
   }
 
   return NextResponse.json({});

@@ -6,7 +6,9 @@ description: >
   Trigger: During Elixir code review, refactoring sessions, or when writing Phoenix/Ecto code.
 metadata:
   author: tsardinasGitHub
-  version: "1.0"
+  version: "1.0.0"
+  last-updated: "2026-03"
+  deprecated: false
 ---
 
 # Elixir Anti-Patterns
